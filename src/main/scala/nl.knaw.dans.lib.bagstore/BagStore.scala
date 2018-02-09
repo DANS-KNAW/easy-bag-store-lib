@@ -39,7 +39,7 @@ class BagStore(baseDir: File, optSlashPattern: Option[SlashPattern] = None) {
    * @param optUuid the UUID to use as bag-id
    * @return the BagId of the added bag
    */
-  def add(bag: Bag, optUuid: Option[UUID] = None): Try[BagId] = ???
+  def add(bag: BagFile, optUuid: Option[UUID] = None): Try[BagId] = ???
 
   /**
    * Copies the referenced item to `target`. If target already exists, the function will
@@ -64,7 +64,6 @@ class BagStore(baseDir: File, optSlashPattern: Option[SlashPattern] = None) {
    */
   def stream(itemId: ItemId, target: => OutputStream, optArchiveStreamType: Option[ArchiveStreamType] = None): Try[Unit] = ???
 
-
   /**
    * Enumerates all the bags in the bag store. By default only active bags will be returned. The optional boolean
    * parameters let you override this behavior.
@@ -75,16 +74,64 @@ class BagStore(baseDir: File, optSlashPattern: Option[SlashPattern] = None) {
    */
   def enumBags(includeActive: Boolean = true, includeInactive: Boolean = false): Try[Stream[Try[BagId]]] = ???
 
-
   /**
    * Enumerates the files in a bag. By default only regular files are returned. The optional boolean parameters let
    * you override this behavior.
    *
-   * @param bagId the bag to enumerate
+   * @param bagId               the bag to enumerate
    * @param includeRegularFiles whether to include regular files
-   * @param includeDirectories whether to include directories
+   * @param includeDirectories  whether to include directories
    */
   def enumFiles(bagId: BagId, includeRegularFiles: Boolean = true, includeDirectories: Boolean = false): Try[Stream[Try[FileId]]] = ???
+
+  /**
+   * Deactivates a bag. An inactive bag should be considered deleted. However, the regular files in an
+   * inactive bag can still be included through a local-file-uri into another bag.
+   *
+   * @param bagId the bag to deactivate.
+   * @return
+   */
+  def deactivate(bagId: BagId): Try[Unit] = ???
+
+  /**
+   * Reverse a previous deactivation.
+   *
+   * @param bag the inactive bag to reactivate
+   * @return
+   */
+  def reactivate(bag: BagId): Try[Unit] = ???
+
+  /**
+   * This will cause the regular payload files referenced by `fileId` to be overwritten with a text message:
+   *
+   * {{{
+   *   ERASED AT: <ISO 8601 TIMESTAMP OF ERASURE>
+   *   BY: <authority>
+   *   REASON: <reason>
+   * }}}
+   *
+   * This records the provenance:
+   *
+   * - The exact time the erasure was initiated.
+   * - The authority who performed the erasure. This should be the full name of a person authorized to
+   *   take the decision to remove data from the archive.
+   * - The reason for the erasure, for example: contract with customer expired, legal obligation to
+   *   remove the data, etc.
+   *
+   * To avoid any risk to the referential integrity of the fetch references, this function temporarily
+   * hides the base-dir of the bag store. It then proceeds to compile the list of payload manifests that
+   * will need to be updated. Then it overwrites the files. Then it calculates the necessary checksums
+   * and updates the manifests. Finally, it reactivates the bag store.
+   *
+   * @param fileId the regular payload files to be erased
+   * @param authority the authority under whose responsibility this actions is performed
+   * @param reason explanation why the data needs to be erased
+   * @return
+   */
+  // TODO: Can we use a digital signing certificate to prove that the authority has indeed authorized the erasure?
+  def erase(authority: String, reason: String, fileId: FileId*): Try[Unit] = ???
+
+
 
 
 }

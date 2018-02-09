@@ -21,7 +21,7 @@ import java.util.UUID
 import better.files.File
 
 package object bagstore {
-  type Bag = File
+  type BagFile = File
   type SlashPattern = Seq[Int]
   type Location = File
 
