@@ -25,7 +25,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.knaw.dans.easy</groupId>
-    <artifactId>easy-bag-store-lib</artifactId>
+    <artifactId>easy-bag-store-lib_2.12</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>EASY Bag Store Library</name>
     <url>https://github.com/DANS-KNAW/easy-bag-store-lib</url>
