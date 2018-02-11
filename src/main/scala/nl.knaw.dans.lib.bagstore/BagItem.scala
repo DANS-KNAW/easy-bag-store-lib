@@ -12,10 +12,22 @@ import scala.util.Try
 class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
   override def getId: ItemId = BagId(uuid)
 
-  override def getLocation: File = {
-    // TODO: get the container location; then get the only file in it (= the bag)
-    bagStore.baseDir `/` uuid.toString
+  override def getLocation: Try[File] = Try {
+    val container = bagStore.baseDir/bagStore.slashPattern.applyTo(uuid).toString
+    val files = container.list
+    if (files.size != 1) throw CorruptBagStoreException(s"container with more than one file for $uuid")
+    else files.toList.head
   }
+
+  /**
+   * Enumerates the items in this bag.
+   *
+   * @param includeRegularFiles
+   * @param includeDirectories
+   * @return
+   */
+  def enum(includeRegularFiles: Boolean = true, includeDirectories: Boolean = false): Try[Stream[Try[FileItem]]] = ???
+
 
   /**
    * A Bag is virtually-valid if:

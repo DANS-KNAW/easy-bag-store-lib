@@ -1,5 +1,6 @@
 package nl.knaw.dans.lib.bagstore
 
+import java.nio.file.Paths
 import java.util.UUID
 
 class SlashPatternSpec extends TestSupportFixture {
@@ -35,10 +36,13 @@ class SlashPatternSpec extends TestSupportFixture {
     pattern shouldBe a[SlashPattern]
   }
 
-  "applyTo" should "divide up the UUID correctly" in {
+  "applyTo" should "divide up the UUID correctly (1)" in {
     val pattern = SlashPattern(2,30)
-    pattern applyTo UUID.fromString(zeros) should be("0" * 2 + "/" + "0" * 30)
+    pattern applyTo UUID.fromString(zeros) should be(Paths.get("0" * 2, "0" * 30))
   }
 
-
+  it should "divide up the UUID correctly (2)" in {
+    val pattern = SlashPattern(4,4,4,4,16)
+    pattern applyTo UUID.fromString(zeros) should be(Paths.get("0" * 4, "0" * 4, "0" * 4, "0" * 4, "0" * 16))
+  }
 }

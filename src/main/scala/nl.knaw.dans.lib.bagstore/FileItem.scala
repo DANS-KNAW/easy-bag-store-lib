@@ -4,6 +4,8 @@ import java.nio.file.Path
 
 import better.files._
 
+import scala.util.{ Success, Try }
+
 /**
  * A File (RegularFile or Directory) stored in a BagStore.
  *
@@ -17,5 +19,6 @@ class FileItem(bagItem: BagItem, path: Path) extends Item {
     FileId(uuid, path)
   }
 
-  override def getLocation: File = bagItem.getLocation/path.toString
+  override def getLocation: Try[File] = bagItem.getLocation.map(_/path.toString)
+
 }

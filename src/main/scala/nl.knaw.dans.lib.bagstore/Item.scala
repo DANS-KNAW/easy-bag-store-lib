@@ -2,6 +2,8 @@ package nl.knaw.dans.lib.bagstore
 
 import better.files.File
 
+import scala.util.Try
+
 /**
  * An item is a bag, directory or regular file in a bag store. An item *always* exists in the context
  * of a bag store.
@@ -21,5 +23,5 @@ trait Item {
    *
    * @return
    */
-  def getLocation: File
+  def getLocation: Try[File]
 }
