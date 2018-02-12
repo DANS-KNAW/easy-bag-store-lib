@@ -17,10 +17,17 @@ case class FileId(uuid: UUID, path: Path) extends ItemId {
   require(!path.isAbsolute, "Path must be relative")
 
   override def toString: String = {
-    uuid.toString + "/" + path.asScala.map(_.toString).map(ItemId.pathEscaper.escape).mkString("/")
+    uuid.toString + "/" + path.asScala.map(_.toString).map(FileId.pathEscaper.escape).mkString("/")
   }
 }
 
+object FileId {
+  private val pathEscaper: Escaper = UrlEscapers.urlPathSegmentEscaper()
+}
+
 object ItemId {
-  private[bagstore] val pathEscaper: Escaper = UrlEscapers.urlPathSegmentEscaper()
+
+
+
+
 }

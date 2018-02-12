@@ -4,11 +4,11 @@ import java.nio.file.{ Path, Paths }
 import java.util.UUID
 
 import better.files.File
+import com.google.common.escape.Escaper
+import com.google.common.net.UrlEscapers
 
 package object bagstore {
   case class CorruptBagStoreException(details: String) extends Exception(s"Corrupt bag store: $details")
-
-
 
   private val uuidLength = 32
 

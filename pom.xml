@@ -66,6 +66,10 @@
             <artifactId>guava</artifactId>
             <version>20.0</version>
         </dependency>
+        <dependency>
+            <groupId>nl.knaw.dans.lib</groupId>
+            <artifactId>dans-scala-lib_2.12</artifactId>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>

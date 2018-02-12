@@ -9,7 +9,7 @@ import scala.util.Try
 /**
  * A Bag that is stored in a BagStore.
  */
-class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
+case class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
   override def getId: ItemId = BagId(uuid)
 
   override def getLocation: Try[File] = Try {
