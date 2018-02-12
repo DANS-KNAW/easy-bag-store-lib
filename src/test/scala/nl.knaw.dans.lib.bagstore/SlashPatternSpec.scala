@@ -3,7 +3,7 @@ package nl.knaw.dans.lib.bagstore
 import java.nio.file.Paths
 import java.util.UUID
 
-class SlashPatternSpec extends TestSupportFixture {
+class SlashPatternSpec extends ReadOnlyTestSupportFixture {
   val zeros = "00000000-0000-0000-0000-000000000000"
 
   "Constructor" should "not accept negative component sizes" in {

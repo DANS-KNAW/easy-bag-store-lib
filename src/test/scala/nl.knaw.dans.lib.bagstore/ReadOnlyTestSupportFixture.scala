@@ -7,7 +7,10 @@ import org.scalatest.{ FlatSpec, Inside, Matchers, OneInstancePerTest }
 
 import scala.util.{ Failure, Success, Try }
 
-trait TestSupportFixture extends FlatSpec with Matchers with Inside with OneInstancePerTest {
+/**
+ * Test support for tests that only need to read files, not write them.
+ */
+trait ReadOnlyTestSupportFixture extends FlatSpec with Matchers with Inside with OneInstancePerTest {
   protected val testResources: File = Paths.get("src/test/resources")
 
   def filesEqual(file1: File, file2: File): Try[Unit] = {
@@ -20,7 +23,7 @@ trait TestSupportFixture extends FlatSpec with Matchers with Inside with OneInst
     }
 
     if (diffs.isEmpty) Success(())
-    else Failure(new IllegalStateException(s"Differences found: ${layoutDifferences(file1, file2, diffs)}"))
+    else Failure(new IllegalStateException(s"Differences found:\n${layoutDifferences(file1, file2, diffs)}\n---\n\n"))
   }
 
   private def pairWithRelativePath(base: File): Seq[(Path, File)] = {
@@ -33,7 +36,7 @@ trait TestSupportFixture extends FlatSpec with Matchers with Inside with OneInst
   private def layoutDifferences(base1: File, base2: File, diffs: Seq[(String, String, Boolean, Boolean)]): String = {
     diffs.map {
       case (p1, p2, names, content) =>
-        s"$p1 <=> $p2: ${if(!names) "different names" else if (!content) "different content" else "???"}"
+        s" - $p1 <=> $p2: ${if(!names) "different names" else if (!content) "different content" else "???"}"
     }.mkString("\n")
   }
 }

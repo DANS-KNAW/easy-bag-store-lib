@@ -14,9 +14,10 @@ case class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
 
   override def getLocation: Try[File] = Try {
     val container = bagStore.baseDir/bagStore.slashPattern.applyTo(uuid).toString
-    val files = container.list
-    if (files.size != 1) throw CorruptBagStoreException(s"container with more than one file for $uuid")
-    else files.toList.head
+    val files = container.list.toList
+    if(files.isEmpty) throw CorruptBagStoreException(s"$uuid: empty container")
+    else if (files.size > 1) throw CorruptBagStoreException(s"$uuid: more than one file in container")
+    else files.head
   }
 
   /**

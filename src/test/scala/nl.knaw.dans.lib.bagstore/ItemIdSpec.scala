@@ -3,7 +3,7 @@ package nl.knaw.dans.lib.bagstore
 import java.nio.file.Paths
 import java.util.UUID
 
-class ItemIdSpec extends TestSupportFixture {
+class ItemIdSpec extends ReadOnlyTestSupportFixture {
 
   "BagId.toString" should "return the same as wrapped UUID.toString" in {
     val uuid = UUID.randomUUID()
