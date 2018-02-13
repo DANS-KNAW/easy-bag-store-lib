@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2018 DANS - Data Archiving and Networked Services (info@dans.knaw.nl)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.knaw.dans.lib.bagstore
 
 import java.nio.file.Path
@@ -6,8 +21,9 @@ import better.files.File
 
 import scala.util.Try
 
-class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
+case class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
 
+  // TODO: Implement getFileDataLocation
   /**
    * Regular file items may be included by fetch-reference in a bag. This function returns to
    * location where the file data is actually stored.
@@ -17,6 +33,7 @@ class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, pa
   def getFileDataLocation: Try[File] = ???
 
 
+  // TODO: Implement erase
   /**
    *
    *
