@@ -15,21 +15,24 @@
  */
 package nl.knaw.dans.lib
 
-import java.nio.file.{ Path, Paths }
+import java.nio.file._
 import java.util.UUID
 
 import better.files.File
-import com.google.common.escape.Escaper
-import com.google.common.net.UrlEscapers
+
+import scala.util.Try
 
 // TODO: Add Jekyll-github pages
-//
+// TODO: Add manual page with code examples
+// TODO: Copy the definitions page from existing easy-bag-store project
 
 package object bagstore {
   case class CorruptBagStoreException(details: String) extends Exception(s"Corrupt bag store: $details")
   case class NoSuchItemException(details: String) extends Exception(s"No such item in bag store: $details")
+  case class BagReaderException(bagFile: File, cause: Throwable) extends Exception(s"Could not read bag at: $bagFile: ${ cause.getMessage }", cause)
 
   private val uuidLength = 32
+
 
   /**
    * A slash pattern is defined by the resulting path's component sizes.
@@ -56,8 +59,29 @@ package object bagstore {
   }
 
   def getAncestors(f: File, c: List[File] = List[File]()): List[File] = {
-    if(f.parent == null) c
+    if (f.parent == null) c
     else f :: getAncestors(f.parent, c)
   }
 
+  /**
+   * Creates a shallow copy of `src` at `target`, consisting of the same directory structure as under `src`, but instead of files, symbolic
+   * links to the source files. The source directory must contain only directories and regular files, no other types of objects. It must also
+   * not contain symbolic links.
+   *
+   * @param src    the source
+   * @param target the target to create
+   * @return
+   */
+  def symLinkCopy(src: File, target: File): Try[File] = Try {
+    import scala.language.postfixOps
+    src.walk().foreach {
+      f =>
+        if (f isSymbolicLink) throw new IllegalArgumentException(s"Found symbolic link in input: $f")
+        val t = target / src.path.relativize(f).toString
+        if (f.isRegularFile) t symbolicLinkTo f
+        else if (f.isDirectory) t.createDirectory()
+        else throw new IllegalArgumentException(s"Encountered an object in src that is neither a regular file nor a directory: $f")
+    }
+    target
+  }
 }
