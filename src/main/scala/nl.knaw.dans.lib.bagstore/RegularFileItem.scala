@@ -19,7 +19,8 @@ import java.nio.file.Path
 
 import better.files.File
 
-import scala.util.Try
+import scala.language.postfixOps
+import scala.util.{ Failure, Try }
 
 case class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
 
@@ -30,8 +31,12 @@ case class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagIte
    *
    * @return the real location of the file data
    */
-  def getFileDataLocation: Try[File] = ???
-
+  def getFileDataLocation: Try[File] = {
+    for {
+      bagLocation <- bagItem.getLocation
+      fileDataLocation <- bagItem.bagStore.getFileDataLocation(bagLocation, path)
+    } yield fileDataLocation
+  }
 
   // TODO: Implement erase
   /**

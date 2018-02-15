@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.lib
 
+import java.net.URI
 import java.nio.file._
 import java.util.UUID
 
@@ -31,13 +32,15 @@ package object bagstore {
   case class NoSuchItemException(details: String) extends Exception(s"No such item in bag store: $details")
   case class BagReaderException(bagFile: File, cause: Throwable) extends Exception(s"Could not read bag at: $bagFile: ${ cause.getMessage }", cause)
 
-  private val uuidLength = 32
-
+  case class FetchItem(uri: URI, size: Long, path: Path) {
+    require(!path.isAbsolute, "path must be relative")
+  }
 
   /**
    * A slash pattern is defined by the resulting path's component sizes.
    */
   case class SlashPattern(componentSizes: Int*) {
+    val uuidLength = 32
     require(componentSizes.forall(_ > 0), "Component sizes must be positive")
     require(componentSizes.forall(_ < uuidLength + 1), s"Component sizes must be at most the size of a UUID string ($uuidLength)")
     require(componentSizes.sum == uuidLength, s"Sum of the component sizes must be $uuidLength")

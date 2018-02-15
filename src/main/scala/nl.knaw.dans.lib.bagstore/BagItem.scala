@@ -15,6 +15,8 @@
  */
 package nl.knaw.dans.lib.bagstore
 
+import java.net.URI
+import java.nio.file.Path
 import java.util.UUID
 
 import better.files.File
@@ -24,7 +26,9 @@ import scala.util.Try
 /**
  * A Bag that is stored in a BagStore.
  */
-class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
+case class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
+  private lazy val maybeInspector = getLocation.map(BagInspector(_))
+
   override def getId: ItemId = BagId(uuid)
 
   override def getLocation: Try[File] = Try {
@@ -57,13 +61,20 @@ class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
    *
    * @return
    */
-  def isVirtuallyValid: Try[Boolean] = {
+  def isVirtuallyValid: Try[Either[String, Unit]] = {
+    for {
+      location <- getLocation
+      result <- bagStore.isVirtuallyValid(location)
+    } yield result
+  }
 
-
-    ???
+  def getFetchUri(path: Path): Try[Option[URI]] = {
+    for {
+      inspector <- maybeInspector
+      fetchItems <- inspector.getFetchItems
+      optUri <- Try { fetchItems.get(path) }
+    } yield optUri.map(_.uri)
   }
 }
 
-object BagItem {
-  def apply(bagStore: BagStore, uuid: UUID): BagItem = new BagItem(bagStore, uuid)
-}
+// TODO: memoization of BagItems

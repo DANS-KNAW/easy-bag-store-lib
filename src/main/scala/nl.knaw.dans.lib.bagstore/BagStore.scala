@@ -15,11 +15,14 @@
  */
 package nl.knaw.dans.lib.bagstore
 
+import java.net.URI
+import java.nio.file.{ Path, Paths }
 import java.nio.file.attribute.{ PosixFilePermission, PosixFilePermissions }
 import java.util.UUID
 
 import better.files.File
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
+import nl.knaw.dans.lib.error._
 
 import scala.collection.JavaConverters._
 import scala.language.postfixOps
@@ -42,13 +45,15 @@ object BagStore {
  * @param containerDirPermissions the permissions to set on container directories and their parents inside the bag store
  * @param bagDirPermissions       the permissions to set on directories added to the bag store
  * @param bagFilePermissions      the permissions to set on regular files added to the bag store
+ *
  */
 case class BagStore(baseDir: File,
                     stagingDir: File,
                     slashPattern: SlashPattern = SlashPattern(2, 30),
                     bagDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r-xr-xr-x").asScala.toSet,
                     bagFilePermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r--r--r--").asScala.toSet,
-                    containerDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("rwxrwx---").asScala.toSet) extends DebugEnhancedLogging {
+                    containerDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("rwxrwx---").asScala.toSet,
+                    localFileBaseUri: URI = new URI("http://localhost/")) extends DebugEnhancedLogging {
   require(baseDir isDirectory, "baseDir must be an existing directory")
   require(baseDir isReadable, "baseDir must be readable")
   require(baseDir isWriteable, "baseDir must be writeable")
@@ -165,7 +170,7 @@ case class BagStore(baseDir: File,
    */
   def get(bagId: BagId): Try[BagItem] = {
     trace(bagId)
-    val bagItem = new BagItem(this, bagId.uuid)
+    val bagItem = BagItem(this, bagId.uuid)
     // Check that the bag exists, but return the bagItem
     bagItem.getLocation.map(_ => bagItem)
   }
@@ -222,6 +227,29 @@ case class BagStore(baseDir: File,
     } yield RegularFileItem(BagItem(this, regularFileId.uuid), regularFileId.path)
   }
 
+  def get(localFileUri: URI): Try [RegularFileItem] = {
+    def reportDifferentComponent(comp: String) = s"localFileUri must have the same $comp as local-file-base-uri: $localFileBaseUri"
+
+    Try {
+      require(localFileUri.getScheme == localFileBaseUri.getScheme, reportDifferentComponent("scheme"))
+      require(localFileUri.getAuthority == localFileBaseUri.getAuthority, reportDifferentComponent("authority"))
+      require(localFileUri.getHost == localFileBaseUri.getHost, reportDifferentComponent("host"))
+      require(localFileUri.getPort == localFileBaseUri.getPort, reportDifferentComponent("port"))
+      val path = Paths.get(localFileUri.getPath)
+      val basePath = Paths.get(localFileBaseUri.getPath)
+      require(path startsWith basePath, s"localFileUri must start with the same path as local-file-base-uri: $localFileBaseUri")
+
+      basePath.relativize(path)
+    }.flatMap {
+      idPath =>
+        if (idPath.getNameCount < 2) throw new IllegalArgumentException("uri has too few components to be regular file item uri")
+        else Try { UUID.fromString(idPath.asScala.head.toString) }
+          .map {
+            uuid => RegularFileItem(BagItem(this, uuid), idPath.subpath(1, idPath.getNameCount))
+          }
+    }
+  }
+
   def enum(includeActive: Boolean = true, includeInactive: Boolean = false): Try[Stream[Try[BagItem]]] = {
     trace(includeActive, includeInactive)
     // TODO: Implement enum
@@ -251,6 +279,31 @@ case class BagStore(baseDir: File,
     ???
   }
 
+  /**
+   * Resolves the relative `path` to a regular file item to the location where its file data is actually stored.
+   *
+   * @param bag the bag in which the regular file is located, possibly only virtually
+   * @param path the bag-relative path of the regular file
+   * @return the real location
+   */
+  def getFileDataLocation(bag: File, path: Path): Try[File] = {
+    val location = bag / path.toString
+    if (location isRegularFile) Try { location }
+    else if (location exists) Failure(new IllegalArgumentException(s"$path points to an existing object, but not a regular file"))
+    else for {
+      inspector <- createBagInspector(bag)
+      fetchItems <- inspector.getFetchItems
+      fetchItem <-  Try { fetchItems.getOrElse(path, throw NoSuchItemException(s"$path is neither and existing file nore a fetch reference")) }
+      fileItem <- get(fetchItem.uri)
+      fileDataLocation <- fileItem.getFileDataLocation
+    } yield fileDataLocation
+  }
+
+  private  def createBagInspector(bag: File) = Try {
+    BagInspector(bag)
+  }.recoverWith {
+    case t: Throwable => Failure(BagReaderException(bag, t))
+  }
 
   /**
    * Determines whether `bag` is virtually-valid with respect to this bag store. The bag may or may not be
@@ -262,13 +315,15 @@ case class BagStore(baseDir: File,
   def isVirtuallyValid(bag: File): Try[Either[String, Unit]] = {
     trace(bag)
 
-    def createBagInspector(bag: File) = Try {
-      BagInspector(bag)
-    }.recoverWith {
-      case t: Throwable => Failure(BagReaderException(bag, t))
+    def getRealToProjected(bag: File, pathsToFetch: Seq[Path]): Try[Map[File, File]] = {
+      pathsToFetch.map(p => getFileDataLocation(bag, p).map { real => (real, bag / p.toString) }).collectResults.map(_.toMap)
     }
 
-    def verifyValid(b: File) = for {
+    def symLinkCompleteBag(bag: File, realToProjected: Map[File, File]) = Try {
+      realToProjected.map { case (real, projected) => projected symbolicLinkTo real }
+    }
+
+    def verifyValid(i: BagInspector, b: File) = for {
       inspector <- createBagInspector(b)
       result <- inspector.verifyValid
     } yield result
@@ -277,12 +332,19 @@ case class BagStore(baseDir: File,
       for {
         tempDir <- Try { File.newTemporaryDirectory("symlink-bag-", Some(stagingDir)) }
         workBag <- symLinkCopy(bag, tempDir / bag.name)
-        result <- verifyValid(workBag)
+        inspector <- createBagInspector(workBag)
+        pathsToFetch <- inspector.getFetchItems.map(_.values.map(_.path))
+        realToProjected <- getRealToProjected(workBag, pathsToFetch.toSeq)
+        _ <- symLinkCompleteBag(workBag, realToProjected)
+        result <- verifyValid(inspector, workBag)
         _ <- Try { tempDir.delete() }
       } yield result
     }
     else {
-      verifyValid(bag)
+      for {
+        inspector <- createBagInspector(bag)
+        result <- verifyValid(inspector, bag)
+      } yield result
     }
   }
 
@@ -310,6 +372,5 @@ case class BagStore(baseDir: File,
     // TODO: Implement complete
     ???
   }
-
 }
 
