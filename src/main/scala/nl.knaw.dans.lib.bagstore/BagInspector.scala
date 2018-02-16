@@ -1,16 +1,35 @@
+/**
+ * Copyright (C) 2018 DANS - Data Archiving and Networked Services (info@dans.knaw.nl)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.knaw.dans.lib.bagstore
 
 import java.nio.file.Path
+import java.util.concurrent.{ CountDownLatch, ExecutorService }
+import java.util.{ ArrayList => JArrayList, Set => JSet }
 
 import better.files.File
-import gov.loc.repository.bagit.domain.Bag
+import gov.loc.repository.bagit.domain.{ Bag, Manifest => BagitManifest }
 import gov.loc.repository.bagit.exceptions._
 import gov.loc.repository.bagit.reader.BagReader
-import gov.loc.repository.bagit.verify.BagVerifier
+import gov.loc.repository.bagit.verify.{ BagVerifier, CheckManifestHashesTask }
 import nl.knaw.dans.lib.bagstore.BagInspector.bagReader
+import nl.knaw.dans.lib.error._
 
-import collection.JavaConverters._
-import scala.util.Try
+import scala.collection.JavaConverters._
+import scala.collection.immutable.Stream.Empty
+import scala.util.{ Failure, Success, Try }
 
 object BagInspector {
   private val bagReader = new BagReader
@@ -62,11 +81,46 @@ case class BagInspector(bagFile: File) {
     } yield result
   }
 
+  def hasValidTagManifests(bagDir: File): Try[Either[String, Unit]] = {
+    def runTasks(tagManifest: BagitManifest)(executor: ExecutorService): Try[Boolean] = {
+      val values = tagManifest.getFileToChecksumMap
+      val exc = new JArrayList[Exception]()
+      val latch = new CountDownLatch(values.size())
+
+      for (entry <- values.entrySet().asScala) {
+        executor.execute(new CheckManifestHashesTask(entry, tagManifest.getAlgorithm.getMessageDigestName, latch, exc))
+      }
+
+      latch.await()
+
+      exc.asScala.toList match {
+        case Nil => Success(true)
+        case (_: CorruptChecksumException) :: _ => Success(false)
+        case e :: _ => Failure(new VerificationException(e))
+      }
+    }
+
+    maybeBag
+      .map(_.getTagManifests.asScala.toStream
+        .map(manifest => (manifest, runTasks(manifest)(BagInspector.bagVerifier.getExecutor).unsafeGetOrThrow))
+        .collect { case (manifest, false) => manifest.getAlgorithm.getMessageDigestName.toLowerCase } match {
+        case Empty => Right(())
+        case fails => Left("The following tagmanifests were invalid: " + fails.mkString("[", ", ", "]"))
+      })
+  }
+
+  // TODO: check that no malicious path can be constructed (maybe bagit lib already checks that)
   def getFetchItems: Try[Map[Path, FetchItem]] = {
     for {
       bag <- maybeBag
       // TODO: make sure fi.path is always relative
-      items <- Try  { bag.getItemsToFetch.asScala.map(fi => (fi.path, FetchItem(fi.url.toURI, fi.length, fi.path))).toMap }
+      items <- Try {
+        bag.getItemsToFetch.asScala.map {
+          fi =>
+            val relativePath = bagFile.path.relativize(fi.path)
+            (relativePath, FetchItem(fi.url.toURI, fi.length, bagFile.path.relativize(fi.path)))
+        }.toMap
+      }
     } yield items
   }
 }

@@ -1,0 +1,3 @@
+Payload-Oxum: 15.1
+Bagging-Date: 2018-02-16
+Bag-Size: 0.1 KB

@@ -142,7 +142,7 @@ case class BagStore(baseDir: File,
            else bagToMove.parent.toTemporary {
              _ => moveBagInto(container)(bagToMove)
            }
-    } yield new BagItem(this, uuid)
+    } yield BagItem(this, uuid)
   }
 
   /**
@@ -287,13 +287,15 @@ case class BagStore(baseDir: File,
    * @return the real location
    */
   def getFileDataLocation(bag: File, path: Path): Try[File] = {
+    trace(bag, path)
     val location = bag / path.toString
     if (location isRegularFile) Try { location }
     else if (location exists) Failure(new IllegalArgumentException(s"$path points to an existing object, but not a regular file"))
     else for {
       inspector <- createBagInspector(bag)
       fetchItems <- inspector.getFetchItems
-      fetchItem <-  Try { fetchItems.getOrElse(path, throw NoSuchItemException(s"$path is neither and existing file nore a fetch reference")) }
+      _ = debug(s"fetchItems = $fetchItems")
+      fetchItem <-  Try { fetchItems.getOrElse(path, throw NoSuchItemException(s"$path is neither and existing file nor a fetch reference")) }
       fileItem <- get(fetchItem.uri)
       fileDataLocation <- fileItem.getFileDataLocation
     } yield fileDataLocation
@@ -319,8 +321,12 @@ case class BagStore(baseDir: File,
       pathsToFetch.map(p => getFileDataLocation(bag, p).map { real => (real, bag / p.toString) }).collectResults.map(_.toMap)
     }
 
-    def symLinkCompleteBag(bag: File, realToProjected: Map[File, File]) = Try {
-      realToProjected.map { case (real, projected) => projected symbolicLinkTo real }
+    def symLinkCompleteBag(realToProjected: Map[File, File]) = Try {
+      realToProjected.map {
+        case (real, projected) =>
+          debug(s"Link from $projected to $real")
+          projected.parent createDirectories()
+          projected symbolicLinkTo real }
     }
 
     def verifyValid(i: BagInspector, b: File) = for {
@@ -335,9 +341,29 @@ case class BagStore(baseDir: File,
         inspector <- createBagInspector(workBag)
         pathsToFetch <- inspector.getFetchItems.map(_.values.map(_.path))
         realToProjected <- getRealToProjected(workBag, pathsToFetch.toSeq)
-        _ <- symLinkCompleteBag(workBag, realToProjected)
+        _ <- symLinkCompleteBag(realToProjected)
+        /*
+         * The BagIt specs https://tools.ietf.org/html/draft-kunze-bagit-14#section-3 is a bit vague about the
+         * status of a bag that fulfills the requires for a complete, and even a valid bag, except that it has
+         * a fetch.txt. The question is whether having a fetch.txt makes the bag incomplete, or only having a
+         * fetch.txt that does not list all the files (present in a manifest) currently missing from the bag.
+         * My own (JvM) reading is, that the presence of the fetch.txt makes it incomplete by definition, and that
+         * not listing the missing files in the fetch.txt makes it "beyond" incomplete - "uncompleteable", if you will.
+         * (It would be one of the ways a bag can be invalid.)
+         *
+         * The bagit-java library, however, regards a bag containing a fetch.txt, but which has been fully resolved,
+         * as valid, so we do not have do anything complicated here to check the virtual validity. If at some point we
+         * switch to a bagit library that takes the other point of view. The following steps should be added:
+         *
+         * 1. Check that the tagmanifests check out
+         * 2. Remove tagmanifests and fetch.txt
+         * 3. Check what remains for validity.
+         *
+         * Also note, that we rely on the java-bagit library following symlinks.
+         */
         result <- verifyValid(inspector, workBag)
-        _ <- Try { tempDir.delete() }
+        _ <- Try { tempDir.delete(swallowIOExceptions = true) }
+        _ = if (tempDir exists) logger.warn(s"Symlink copy in $tempDir could not be (completely) removed!")
       } yield result
     }
     else {

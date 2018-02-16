@@ -23,6 +23,7 @@ import better.files.File
 
 import scala.util.Try
 
+
 /**
  * A Bag that is stored in a BagStore.
  */

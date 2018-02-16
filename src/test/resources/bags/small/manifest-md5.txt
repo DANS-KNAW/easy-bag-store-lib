@@ -1,0 +1,1 @@
+ddfe9a18a7ca5427234e6e93edc5a5ee  data/file1.txt
