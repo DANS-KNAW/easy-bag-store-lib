@@ -24,7 +24,6 @@ import scala.util.{ Failure, Try }
 
 case class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
 
-  // TODO: Implement getFileDataLocation
   /**
    * Regular file items may be included by fetch-reference in a bag. This function returns to
    * location where the file data is actually stored.

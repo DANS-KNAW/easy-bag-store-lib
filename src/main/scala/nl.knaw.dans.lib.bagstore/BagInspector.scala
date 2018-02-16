@@ -113,7 +113,6 @@ case class BagInspector(bagFile: File) {
   def getFetchItems: Try[Map[Path, FetchItem]] = {
     for {
       bag <- maybeBag
-      // TODO: make sure fi.path is always relative
       items <- Try {
         bag.getItemsToFetch.asScala.map {
           fi =>

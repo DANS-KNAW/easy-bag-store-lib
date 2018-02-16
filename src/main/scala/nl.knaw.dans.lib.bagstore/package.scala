@@ -26,6 +26,7 @@ import scala.util.Try
 // TODO: Add Jekyll-github pages
 // TODO: Add manual page with code examples
 // TODO: Copy the definitions page from existing easy-bag-store project
+// TODO: Figure out how to use from Java-code (wrappers needed?)
 
 package object bagstore {
   case class CorruptBagStoreException(details: String) extends Exception(s"Corrupt bag store: $details")
