@@ -68,7 +68,7 @@ case class BagStore(baseDir: File,
    *
    * Currently, only unserialized bags are supported.
    *
-   * By default, a copy of `bag` will be staged staged to `stagingDir`. However, the caller can skip this
+   * By default, a copy of `bag` will be staged to `stagingDir`. However, the caller can skip this
    * step and have `bag` be moved into the bag store from its current location. In that case, the current
    * location must be on the same partition as the bag store itself, so that an atomic move operation is
    * possible.
@@ -344,7 +344,7 @@ case class BagStore(baseDir: File,
         _ <- symLinkCompleteBag(realToProjected)
         /*
          * The BagIt specs https://tools.ietf.org/html/draft-kunze-bagit-14#section-3 is a bit vague about the
-         * status of a bag that fulfills the requires for a complete, and even a valid bag, except that it has
+         * status of a bag that fulfills the requirements for a complete, and even a valid bag, except that it has
          * a fetch.txt. The question is whether having a fetch.txt makes the bag incomplete, or only having a
          * fetch.txt that does not list all the files (present in a manifest) currently missing from the bag.
          * My own (JvM) reading is, that the presence of the fetch.txt makes it incomplete by definition, and that

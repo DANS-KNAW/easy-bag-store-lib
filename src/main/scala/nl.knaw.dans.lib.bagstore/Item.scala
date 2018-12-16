@@ -15,6 +15,8 @@
  */
 package nl.knaw.dans.lib.bagstore
 
+import java.io.InputStream
+
 import better.files.File
 
 import scala.util.Try
@@ -24,6 +26,26 @@ import scala.util.Try
  * of a bag store.
  */
 trait Item {
+  object Packaging extends Enumeration {
+    type Packaging = Value
+    /*
+     * No packaging is applied to the data, i.e. it is returned unwrapped.
+     */
+    val NONE: Packaging = Value
+
+    /*
+     * The data is packaged as TAR stream.
+     */
+    val TAR: Packaging = Value
+
+    /*
+     * The data is packaged as a 7z stream.
+     */
+    val _7Z: Packaging = Value
+  }
+
+  import Packaging._
+
 
   /**
    * The item-id is the key you can use to look up this item in the bag store.
@@ -33,10 +55,18 @@ trait Item {
   def getId: ItemId
 
   /**
-   * The location on storage where the item resides. Note that in the case of regular files this may
-   * be a virtual location.
+   * The location where the item is stored.
    *
    * @return
    */
   def getLocation: Try[File]
+
+  /**
+   * Opens and returns a `java.io.InputStream` to read the item data.
+   *
+   * @param packaging how to package the data
+   *
+   */
+  def getStream(packaging: Packaging = NONE): Try[InputStream]
+
 }

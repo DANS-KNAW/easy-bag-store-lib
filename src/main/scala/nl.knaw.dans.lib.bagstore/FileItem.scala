@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.lib.bagstore
 
+import java.io.InputStream
 import java.nio.file.Path
 
 import better.files._
@@ -35,6 +36,15 @@ class FileItem(bagItem: BagItem, path: Path) extends Item {
   }
 
   override def getLocation: Try[File] = bagItem.getLocation.map(_ / path.toString)
+
+  override def getStream(packaging: Packaging.Packaging): Try[InputStream] = ???
+
+  /**
+   * Returns whether this file is part of serialized bag.
+   *
+   * @return `true` if part of a serialized bag, `false` otherwise
+   */
+  def isPackaged: Try[Boolean] = ???
 
 }
 

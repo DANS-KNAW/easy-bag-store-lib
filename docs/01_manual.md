@@ -12,61 +12,86 @@ TABLE OF CONTENTS
 SYNOPSIS
 --------
 
-```xml
-    <dependency>
-        <groupId>nl.knaw.dans.shared</groupId>
-        <artifactId>easy-bag-store-lib_2.12</artifactId>
-        <version>1.0.0</version>
-    </dependency>
+```scala
+   import nl.knaw.dans.lib.bagstore._
+   import better.files._
+
+   val bagStore = BagStore(
+       baseDir = File("/data/my-bag-store"),
+       stagingDir = File("/data/bag-staging"))
+   val bag = new File("/home/myhome/mybag")
+   bagStore.add(bag).map(item =>
+      println("Bag added")
+      println(s"Bag ID = ${item.getId}")
+      println(s"Storage at ${item.getLocation.getOrElse("don't know")}"))
+
+   bagStore.get(BagId("2c6b4e34-004b-11e9-a516-bf707c4199d6"))
+      .map(item =>
+        println("Found bag")
+        println("")
+
+
 ```
+
 
 
 DESCRIPTION
 -----------
-A bag store is a way to store and identify data packages following a few very simple rules. See the [bag-store] page
-for a quasi-formal description and see the [tutorial] page for a more informal, hands-on introduction. The `easy-bag-store` 
-command line tool and HTTP-service facilitate the management of one or more bag stores, but use of these tools is optional; 
-the whole point of the bag store concept is that it should be fairly easy to implement your own tools for working with it.
+A bag store is a way to store and identify data packages following a few very simple rules. See the [definitions] page
+for a quasi-formal description and see the [tutorial] page for a more informal, hands-on introduction. The tutorial uses
+the [`easy-bag-store`] program, which implements both a command line and an HTTP interface to a bag store. However, the
+bag store should be viewed first and foremost as a specification and it should be fairly simple to implement your own tools.
+This library can be considered a reference implementation.
 
-[bag-store]: 03_definitions.html
+[definitions]: 03_definitions.html
 [tutorial]: 04_tutorial.html
+[`easy-bag-store`]: https://github.com/DANS-KNAW/easy-bag-store
 
-### Command line tool
-By using the `easy-bag-store` command you can manage a bag store from the command line. The sub-commands in above 
-[SYNOPSIS](#synopsis) are subdivided into two groups:
 
-* Sub-commands that target items in the bag store. These implement operations that change, check or retrieve items in a bag store.
-* Sub-commands that target bags outside a bag store. These are typically bags that are intended to be 
-  added to a bag store later, or that have just been retrieved from one. These sub-commands still work in the context of one or
-  more bag stores, because the bag directories they operate on may contain [local references] to bags in those stores.
-  
-Some of the sub-commands require you to specify the store context you want to use. The store to operate on can be specified
-in one of two ways:
+EXAMPLES
+--------
+TODO: add "recipes"
 
-* With the `--store` option. This expects the shortname of a store, which is mapped to a base directory in the `stores.properties`
-  configuration file.
-* By specifying the base directory directly, using the `--base-dir` option.
-
-If you call a sub-command that requires a store context, without providing one, you are prompted for a store shortname.
-
-### HTTP service
-`easy-bag-store` can also be executed as a service that accepts HTTP requests, using the sub-command `run-service`. `initd` and
-`systemd` scripts are provided, to facilitate deployment on a Unix-like system (see [INSTALLATION AND CONFIGURATION](#installation-and-configuration)).
-
-For details about the service API see the [OpenAPI specification].
-
-[OpenAPI specification]: ./api.html
-[local references]: 03_definitions.html#local-item-uri
 
 INSTALLATION AND CONFIGURATION
 ------------------------------
-The preferred way of install this module is using the RPM package. This will install the binaries to
-`/opt/dans.knaw.nl/easy-bag-store`, the configuration files to `/etc/opt/dans.knaw.nl/easy-bag-store`,
-and will install the service script for `initd` or `systemd`. It will also set up a default bag store
-at `/srv/dans.kanw.nl/bag-store`.
+To use this library from a Maven project, add the DANS Maven repository to your POM, as well one dependency:
 
-If you are on a system that does not support RPM, you can use the tarball. You will need to copy the
-service scripts to the appropiate locations yourself.
+```xml
+    <project xmlns="http://maven.apache.org/POM/4.0.0"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+             http://maven.apache.org/maven-v4_0_0.xsd">
+    <!---
+    ...
+    --->
+
+        <dependencies>
+          <!---
+            ...
+          --->
+          <dependency>
+              <groupId>nl.knaw.dans.shared</groupId>
+              <artifactId>easy-bag-store-lib_2.12</artifactId>
+              <version>${easy-bag-store.version}</version>
+          </dependency>
+        </dependencies>
+        <repositories>
+            <!--
+              Possibly other repositories here
+            -->
+            <repository>
+                <id>DANS</id>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <url>http://maven.dans.knaw.nl/</url>
+            </repository>
+        </repositories>
+    </project>
+```
+
+
 
 BUILDING FROM SOURCE
 --------------------

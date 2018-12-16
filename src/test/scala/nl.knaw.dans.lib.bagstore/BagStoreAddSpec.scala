@@ -15,12 +15,11 @@
  */
 package nl.knaw.dans.lib.bagstore
 
+import java.nio.file.attribute.PosixFilePermissions
 import java.util.UUID
 
+import scala.collection.JavaConverters._
 import scala.util.Success
-import java.nio
-import collection.JavaConverters._
-import java.nio.file.attribute.PosixFilePermissions
 
 class BagStoreAddSpec extends ReadWriteTestSupportFixture {
   private val baseDir = (testDir / "bag-store").createDirectories()

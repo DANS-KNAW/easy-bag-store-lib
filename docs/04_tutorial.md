@@ -54,7 +54,7 @@ For our [SWORDv2 deposit service] we had already decided on [BagIt] as the excha
 we could come up with, therefore, was just storing these bags in a directory on the file system. This is 
 essentially what a bag store is. However, to support all the above properties we had to put on some 
 additional constraints. As we go along I will introduce these constraints one by one and explain how 
-they support the properties. I shall use the high-lighted words a mnemonics to refer back to the items
+they support the properties. I shall use the high-lighted words as mnemonics to refer back to the items
 on the list. 
 
 [Appendix I] tries to give a more elaborate justification for above list of properties.  

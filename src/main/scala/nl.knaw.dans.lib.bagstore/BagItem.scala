@@ -15,6 +15,7 @@
  */
 package nl.knaw.dans.lib.bagstore
 
+import java.io.InputStream
 import java.net.URI
 import java.nio.file.Path
 import java.util.UUID
@@ -23,7 +24,7 @@ import better.files.File
 
 import scala.util.Try
 
-
+// TODO: make constructor private?
 /**
  * A Bag that is stored in a BagStore.
  */
@@ -76,6 +77,8 @@ case class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
       optUri <- Try { fetchItems.get(path) }
     } yield optUri.map(_.uri)
   }
+
+  def getStream(packaging: Packaging.Packaging): Try[InputStream] = ???
 }
 
-// TODO: memoization of BagItems
+// TODO: memoization of BagItems?

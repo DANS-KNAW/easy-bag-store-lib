@@ -68,11 +68,8 @@ A Bag is virtually-valid if:
   [local-file-uris](#local-file-uri) are used, they must reference RegularFiles in the same BagStore.
   
 #### (in)active  
-A Bag in a BagStore is inactive if it has a hidden attribute in the file system, or if its name starts 
-with a full stop character (which on some file systems is the same thing). It is active otherwise. 
-The BagStore may support transitioning a Bag between active and inactive, as an exception to the 
-immutability property.
-  
+A Bag in a BagStore is inactive if its name starts with a full stop character. It is active otherwise.
+
 ### Item
 An **Item** is a Bag, or a **File** in a Bag. A File may be a **RegularFile** or a **Directory**. 
 Each Item has an **item-id**. 
@@ -81,9 +78,11 @@ Each Item has an **item-id**.
 The item-ids are defined as follows:
 
 - **bag-id** = `<uuid>`, that is a [UUID]. 
-- **file-id** = `<bag-id>/percent-encoded(path-in-bag)`, where **percent-encoded** means that the 
-  path-components are percent encoded as described in [RFC3986] and **path-in-bag** is the relative
-  path of the File in the bag, after `fetch.txt` has been resolved.
+- **file-id** = `<bag-id>/percent-encoded(<path-in-bag>)`, where:
+
+  - **percent-encoded** means that the path-components are percent encoded as described in [RFC3986].
+
+  - **path-in-bag** is the relative path of the File in the bag, after `fetch.txt` has been resolved.
   
 #### item-location
 The item-locations are defined as follows:
@@ -94,9 +93,11 @@ The item-locations are defined as follows:
       of characters, with the slash as separator, forming a file path. The number of slashes to insert 
       and where to insert them is specified by the **slash-pattern**.
   
-    - **bag** is the Bag's base directory.  
+    - **bag** the name of the Bag. For an unserialized Bag this is the name of the base directory, for a serialized
+      Bag the name of the archive file containing it, including the extension, such as `.tar` or `.7z`. The
+      base directory of the bag must always be the same as base name of the serialized bag.
       
-    - the dot, if present, means that the bag is [inactive](#inactive).
+    - the **dot**, if present, means that the bag is [inactive](#inactive).
       
 - **file-location** = `<bag-location>/<path-in-bag>`. A RegularFile may have a [**file-data-location**](#file-data-location)
   and a Directory may not have one unique location that contains all the Files in it.
@@ -122,41 +123,45 @@ BagStore.
 
 [BagIt]: https://tools.ietf.org/html/draft-kunze-bagit
 [valid]: https://tools.ietf.org/html/draft-kunze-bagit#section-3
-[serialization]: https://tools.ietf.org/html/draft-kunze-bagit#section-4
 [UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
 [RFC3986]: https://tools.ietf.org/html/rfc3986#section-2.1
 [`fetch.txt`]: https://tools.ietf.org/html/draft-kunze-bagit#section-2.2.3
 
 Operations
 ----------
-On a BagStore the following operations are allowed. They have been subdivided into two groups. The core
-operations must be supported directly, the extra operations *may* be supported only through [Migration]:
+On a BagStore the following operations are allowed. They have been subdivided into two groups. The [core]
+operations are the minimum you will need to manage a BagStore, the [extra] operations may be needed to
+implement other use cases efficiently.
 
 ### Core
-* `ADD` - add a new, virtually-valid Bag to the BagStore.
-* `ENUM` - enumerate all the Items in the BagStore or all the items in one Bag.
-* `GET` - copy an Item from the BagStore.
+* `ADD` - add a virtually-valid Bag to the BagStore.
+* `ENUM` - enumerate all the Bags in the BagStore.
+* `GET` - copy a Bag or an non-packaged RegularFile from the BagStore.
+* `DEACTIVATE` - mark a Bag as inactive.
+* `REACTIVATE` - reverse a deactivation.
 
 Note that this means that Bags are immutable. To support updates to Bags, add metadata that records 
 that a Bag is part of a sequence of Bags, that together form the revision history of one logical 
 (and mutable) Bag. See for an example implementation the [easy-bag-index] project.
 
-### Extra
-* `DEACTIVATE` - mark a Bag as inactive.
-* `REACTIVATE` - reverse a deactivation.
-* `ERASE` - erase the contents of a particular Bag **payload** File, and update the corresponding 
-   entries in any affected payload manifests accordingly. 
-
-The `DEACTIVATE` operation marks a Bag as inactive. This involves marking the Bag directory as hidden 
-by prepending its name with a dot. Note that this operation does not require copying or modifying any 
-File data. The only "file" that is modified is the directory containing the Bag. On some file systems 
+The `DEACTIVATE` operation marks a Bag as inactive. This involves marking the Bag directory as hidden
+by prepending its name with a dot. Note that this operation does not require copying or modifying any
+File data. The only "file" that is modified is the directory containing the Bag. On some file systems
 this may still require write-privileges on the bag-base-dir.
 
-The `ERASE` operation is the one exception to the rule that Bags are immutable. It must only be used in cases
-where there is a legal obligation to destroy the data. For other use cases there are better solutions:
+### Extra
+* `STREAM` - copy the content bytes of one or more Items.
+* `ERASE` - erase the contents of a particular Bag **payload** File, and update the corresponding
+   entries in any affected payload manifests accordingly. 
+
+The `ERASE` operation is the one exception to the rule that Bags are immutable. It should only be used in cases
+where there is a legal obligation to destroy the data. Otherwise you should implement a revision history using
+a bag sequence or use bag deactivation.
 
 [easy-bag-index]: https://github.com/DANS-KNAW/easy-bag-index
 [Migration]: #migrations
+[core]: #core
+[extra]: #extra
 
 Examples
 --------
@@ -167,13 +172,10 @@ Given are a bag store with a base-dir of `/srv/dans.knaw.nl/bag-store/`, and sla
  
        /srv/dans.knaw.nl/bag-store/75/444957009d4289aae7270342ce27d4/example/
 
-2. If we store it unserialized this bag-location will be an actual directory on the file system, if
-   we store it serialized as a TAR archive, the bag will be stored as the file: 
+2. If we store it serialized as a TAR archive, the bag-location will be:
    
        /srv/dans.knaw.nl/bag-store/75/444957009d4289aae7270342ce27d4/example.tar
 
-   (Note that bag-location in example 1 and 2 is the same.)
-   
 3. If `example` contains a regular file at `data/my document.txt`, relative to the bag's base directory,
    its file-id will be:
 
@@ -188,8 +190,8 @@ Given are a bag store with a base-dir of `/srv/dans.knaw.nl/bag-store/`, and sla
    
        /srv/dans.knaw.nl/bag-store/54/89c18e324b487392b85d324775c183/
        
-   There may only be one file in this directory, which may be either a directory or an archive file. In the 
-   former case it is an unserialized bag in the latter a [serialization].
+   There must only be one file in this directory, which may be either a directory or an archive file. In the
+   former case it is an unserialized bag in the latter a serialized bag.
    
 5. To look up the file-id `5489c18e-324b-4873-92b8-5d324775c183/data/is/here.txt` we can follow the following
    procedure:

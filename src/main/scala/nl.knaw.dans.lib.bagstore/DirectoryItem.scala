@@ -15,6 +15,11 @@
  */
 package nl.knaw.dans.lib.bagstore
 
+import java.io.InputStream
 import java.nio.file.Path
 
-case class DirectoryItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path)
+import scala.util.Try
+
+case class DirectoryItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
+  override def getStream(packaging: Packaging.Packaging): Try[InputStream] = ???
+}
