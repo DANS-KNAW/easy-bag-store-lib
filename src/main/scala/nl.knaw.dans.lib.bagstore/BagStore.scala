@@ -52,7 +52,7 @@ case class BagStore(baseDir: File,
                     slashPattern: SlashPattern = SlashPattern(2, 30),
                     bagDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r-xr-xr-x").asScala.toSet,
                     bagFilePermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r--r--r--").asScala.toSet,
-                    containerDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("rwxrwx---").asScala.toSet,
+                    containerDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("rwxr-xr-x").asScala.toSet,
                     localFileBaseUri: URI = new URI("http://localhost/")) extends DebugEnhancedLogging {
   require(baseDir isDirectory, "baseDir must be an existing directory")
   require(baseDir isReadable, "baseDir must be readable")
@@ -85,7 +85,6 @@ case class BagStore(baseDir: File,
 
     def checkArgs = Try {
       require(!bag.isHidden, "Input bag must be a non-hidden file")
-      require(bag.isDirectory, "Currently, only unserialized bags are supported")
     }
 
     def getUuid = Try {
@@ -111,20 +110,26 @@ case class BagStore(baseDir: File,
     def createContainer(uuid: UUID) = Try {
       val container = baseDir / slashPattern.applyTo(uuid).toString
       container.createDirectories()
+      debug(s"Created container at $container")
       getAncestors(container).withFilter(baseDir.isParentOf).foreach(_.setPermissions(containerDirPermissions))
       container
     }
 
     def moveBagInto(container: File)(bag: File) = Try {
-      bag.walk().filter(_ != bag).foreach {
-        f =>
-          if (f.isDirectory) f.setPermissions(bagDirPermissions)
-          else f.setPermissions(bagFilePermissions)
+      if (bag.isDirectory) {
+        debug("Bag is unserialized. Setting permissions inside the bag.")
+        bag.walk().filter(_ != bag).foreach {
+          f =>
+            if (f.isDirectory) f setPermissions bagDirPermissions
+            else f setPermissions bagFilePermissions
+        }
       }
       val movedBag = bag moveToDirectory container
+      debug("Setting permissions on the bag itself.")
       movedBag setPermissions bagDirPermissions
     }.recover {
       case _ =>
+        logger.error("Move into container failed. Deleting container and empty ancestors")
         container.delete(swallowIOExceptions = true)
         getAncestors(container).withFilter(d => baseDir.isParentOf(d) && baseDir != d).foreach {
           d => if (d.list.isEmpty) d.delete()
@@ -334,6 +339,13 @@ case class BagStore(baseDir: File,
       result <- inspector.verifyValid
     } yield result
 
+    if (bag isRegularFile) {
+
+
+
+    }
+
+
     if (bag / BagStore.fetchTxtFilename exists) {
       for {
         tempDir <- Try { File.newTemporaryDirectory("symlink-bag-", Some(stagingDir)) }
@@ -396,6 +408,17 @@ case class BagStore(baseDir: File,
    */
   def complete(bag: File): Try[Unit] = {
     // TODO: Implement complete
+    ???
+  }
+
+  /**
+   * Verifies that this bag store is consistent.
+   *
+   *
+   * @return
+   */
+  def verify: Try[Unit] = {
+    // TODO: Implement verify
     ???
   }
 }

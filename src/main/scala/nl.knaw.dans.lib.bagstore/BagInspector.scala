@@ -44,6 +44,7 @@ object BagInspector {
        * exception. Any other (non-fatal) exception type means the verification process itself failed;
        * this should lead to a Failure. (Btw fatal errors will NOT be wrapped in a Failure by above Try block!)
        */
+      // TODO: solve compiler problem in IntelliJ
       case cause: MissingPayloadManifestException => Left(cause.getMessage)
       case cause: MissingBagitFileException => Left(cause.getMessage)
       case cause: MissingPayloadDirectoryException => Left(cause.getMessage)
@@ -68,7 +69,7 @@ case class BagInspector(bagFile: File) {
   }
 
   /**
-   * Verifies if the bag is valid, according to the BagIt specs. If the verfication process succeeded
+   * Verifies if the bag is valid, according to the BagIt specs. If the verification process succeeded
    * the result is a `Right` (meaning the bag is valid) or a `Left` (meaning it is non-valid). If it is
    * a `Left`, the results contains the reason why the bag is non-valid.
    *

@@ -24,11 +24,10 @@ import better.files.File
 
 import scala.util.Try
 
-// TODO: make constructor private?
 /**
  * A Bag that is stored in a BagStore.
  */
-case class BagItem(bagStore: BagStore, uuid: UUID) extends Item {
+case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
   private lazy val maybeInspector = getLocation.map(BagInspector(_))
 
   override def getId: ItemId = BagId(uuid)

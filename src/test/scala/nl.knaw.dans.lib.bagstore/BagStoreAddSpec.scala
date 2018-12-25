@@ -48,5 +48,17 @@ class BagStoreAddSpec extends ReadWriteTestSupportFixture {
     }
   }
 
+  it should "not accept an invalid unserialized bag" ignore {}
 
+  it should "accept an incomplete unserialized bag that is virtually-valid" in {}
+
+  it should "remove parent directory in staging directory after adding with staging" in {}
+
+  it should "NOT remove parent directory in staging directory after adding with move" in {}
+
+  it should "set bag directory permission as specified in BagStore constructor" in {}
+
+  it should "set bag file permissions as specified in BagStore contstructor" in {}
+
+  it should "set serialized bag permissions to the values specified for bag dir permissions" in {}
 }

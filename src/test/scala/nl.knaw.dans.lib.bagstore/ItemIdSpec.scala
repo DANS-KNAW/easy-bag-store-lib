@@ -20,7 +20,7 @@ import java.util.UUID
 
 class ItemIdSpec extends ReadOnlyTestSupportFixture {
 
-  "BagId.toString" should "return the same as wrapped UUID.toString" in {
+  "BagId.toString" should "return the same as wrappedUUID.toString" in {
     val uuid = UUID.randomUUID()
     BagId(uuid).toString shouldBe uuid.toString
   }
@@ -30,7 +30,7 @@ class ItemIdSpec extends ReadOnlyTestSupportFixture {
     FileId(uuid, Paths.get("some/path")).toString shouldBe s"$uuid/some/path"
   }
 
-  it should "not accept an empty path" in {
+  "FileId ctor" should "not accept an empty path" in {
     an[IllegalArgumentException] should be thrownBy FileId(UUID.randomUUID(), Paths.get(""))
   }
 
