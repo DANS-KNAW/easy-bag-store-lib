@@ -61,4 +61,13 @@ class BagStoreIsVirtuallyValidSpec extends ReadWriteTestSupportFixture {
       case Success(r) => r should be(Right(()))
     }
   }
+
+  it should "return false if two fetch entries write to the same local path" in {
+
+  }
+
+  it should "return false if a fetch entry writes to a local path that contains a file" in {
+
+  }
+
 }
