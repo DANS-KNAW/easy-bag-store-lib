@@ -28,6 +28,14 @@ import scala.util.{ Failure, Success, Try }
 trait ReadOnlyTestSupportFixture extends FlatSpec with Matchers with Inside with OneInstancePerTest {
   protected val testResources: File = Paths.get("src/test/resources")
 
+  /**
+   * Verifies that two files (including two directories) are the same, i.e. contain files with the same
+   * names, relative paths and content.
+   *
+   * @param file1 first file or directory
+   * @param file2 second file or directory
+   * @return
+   */
   def filesEqual(file1: File, file2: File): Try[Unit] = {
     val diffs = (pairWithRelativePath(file1) zip pairWithRelativePath(file2))
       .map {

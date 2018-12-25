@@ -26,16 +26,18 @@ import gov.loc.repository.bagit.reader.BagReader
 import gov.loc.repository.bagit.verify.{ BagVerifier, CheckManifestHashesTask }
 import nl.knaw.dans.lib.bagstore.BagInspector.bagReader
 import nl.knaw.dans.lib.error._
+import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Stream.Empty
 import scala.util.{ Failure, Success, Try }
 
-object BagInspector {
+object BagInspector extends DebugEnhancedLogging {
   private val bagReader = new BagReader
   private val bagVerifier = new BagVerifier()
 
   private def verifyValid(bag: Bag): Try[Either[String, Unit]] = Try {
+    trace(())
     bagVerifier.isValid(bag, false)
   }.map(_ => Right(()))
     .recover {
@@ -44,7 +46,6 @@ object BagInspector {
        * exception. Any other (non-fatal) exception type means the verification process itself failed;
        * this should lead to a Failure. (Btw fatal errors will NOT be wrapped in a Failure by above Try block!)
        */
-      // TODO: solve compiler problem in IntelliJ
       case cause: MissingPayloadManifestException => Left(cause.getMessage)
       case cause: MissingBagitFileException => Left(cause.getMessage)
       case cause: MissingPayloadDirectoryException => Left(cause.getMessage)

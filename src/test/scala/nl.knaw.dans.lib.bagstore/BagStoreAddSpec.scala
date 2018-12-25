@@ -19,7 +19,7 @@ import java.nio.file.attribute.PosixFilePermissions
 import java.util.UUID
 
 import scala.collection.JavaConverters._
-import scala.util.Success
+import scala.util.{ Failure, Success }
 
 class BagStoreAddSpec extends ReadWriteTestSupportFixture {
   private val baseDir = (testDir / "bag-store").createDirectories()
@@ -48,9 +48,17 @@ class BagStoreAddSpec extends ReadWriteTestSupportFixture {
     }
   }
 
-  it should "not accept an invalid unserialized bag" ignore {}
+  it should "not accept an invalid, unserialized bag" in {
+    bagStore.add(testResources / "bags" / "invalid") should matchPattern { case Failure(NonVirutallyValidBagException(_)) => }
+  }
 
-  it should "accept an incomplete unserialized bag that is virtually-valid" in {}
+  it should "accept an incomplete, unserialized bag that is virtually-valid" in {
+    testResources / "bag-stores" / "three-revisions" copyToDirectory  testDir
+    val bagStoreThreeRevisions = BagStore(testDir / "three-revisions", stagingDir,
+      bagDirPermissions = PosixFilePermissions.fromString("rwx------").asScala.toSet,
+      bagFilePermissions = PosixFilePermissions.fromString("rwx------").asScala.toSet)
+    bagStoreThreeRevisions.add(testResources / "bags" / "bag-revision-4") shouldBe a[Success[_]]
+  }
 
   it should "remove parent directory in staging directory after adding with staging" in {}
 

@@ -470,7 +470,7 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagItem#enum" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="nl.knaw.dans.lib.bagstore.BagItem#enum" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="enum(includeRegularFiles:Boolean,includeDirectories:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]]]"></a><a id="enum(Boolean,Boolean):Try[Stream[Try[FileItem]]]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#enum(includeRegularFiles:Boolean,includeDirectories:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]]]" title="Permalink">
@@ -485,7 +485,9 @@
         <span class="name">enum</span><span class="params">(<span name="includeRegularFiles">includeRegularFiles: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="includeDirectories">includeDirectories: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.util.Try">Try</span>[<a href="FileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileItem">FileItem</a>]]]</span>
       </span>
       
-      <p class="shortcomment cmt">Enumerates the items in this bag.</p>
+      <p class="shortcomment cmt">Enumerates the Files in this Bag.</p><div class="fullcomment"><div class="comment cmt"><p>Enumerates the Files in this Bag. The Files are returned as a stream of <code>Try[FileItem]</code>. If a Failure is encountered,
+it means that the method failed to successfully retrieve all items. It will not try to retrieve any more items after
+the failure and the result must be regarded as incomplete.</p></div><dl class="paramcmts block"><dt class="param">includeRegularFiles</dt><dd class="cmt"><p>&nbsp;whether to include RegularFiles.</p></dd><dt class="param">includeDirectories</dt><dd class="cmt"><p>&nbsp;whether to include Directories.</p></dd><dt>returns</dt><dd class="cmt"><p>a stream of Files.</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">

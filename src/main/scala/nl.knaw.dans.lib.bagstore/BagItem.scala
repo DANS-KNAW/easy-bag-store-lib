@@ -41,11 +41,14 @@ case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
   }
 
   /**
-   * Enumerates the items in this bag.
+   * Enumerates the Files in this Bag. The Files are returned as a stream of `Try[FileItem]`. If a Failure is encountered,
+   * it means that the method failed to successfully retrieve all items. It will not try to retrieve any more items after
+   * the failure and the result must be regarded as incomplete.
    *
-   * @param includeRegularFiles
-   * @param includeDirectories
-   * @return
+   * <!-- nbsp below to fix Scaladoc issue -->
+   * @param includeRegularFiles  &nbsp;whether to include RegularFiles.
+   * @param includeDirectories  &nbsp;whether to include Directories.
+   * @return a stream of Files.
    */
   def enum(includeRegularFiles: Boolean = true, includeDirectories: Boolean = false): Try[Stream[Try[FileItem]]] = ???
 
@@ -79,5 +82,3 @@ case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
 
   def getStream(packaging: Packaging.Packaging): Try[InputStream] = ???
 }
-
-// TODO: memoization of BagItems?
