@@ -187,8 +187,8 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <a class="object" href="BagStore$.html" title=""></a>
-                        <a class="class" href="" title="Represents an existing bag store."></a>
-                        <a href="" title="Represents an existing bag store.">
+                        <a class="trait" href="" title="Interface to a bag store."></a>
+                        <a href="" title="Interface to a bag store.">
                           BagStore
                         </a>
                       </li><li class="current-entities indented5">
@@ -274,9 +274,9 @@
             </div>
           </div>
           <div id="content">
-            <body class="class type">
+            <body class="trait type">
       <div id="definition">
-        <a href="BagStore$.html" title="See companion object"><div class="big-circle class-companion-object">c</div></a>
+        <a href="BagStore$.html" title="See companion object"><div class="big-circle trait-companion-object">t</div></a>
         <p id="owner"><a href="../../../../index.html" class="extype" name="nl">nl</a>.<a href="../../../index.html" class="extype" name="nl.knaw">knaw</a>.<a href="../../index.html" class="extype" name="nl.knaw.dans">dans</a>.<a href="../index.html" class="extype" name="nl.knaw.dans.lib">lib</a>.<a href="index.html" class="extype" name="nl.knaw.dans.lib.bagstore">bagstore</a></p>
         <h1><a href="BagStore$.html" title="See companion object">BagStore</a><span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html" title="Permalink">
@@ -291,22 +291,39 @@
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">BagStore</span><span class="result"> extends <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span></span>
+        <span class="name">BagStore</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
 
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Represents an existing bag store. The bag store may be empty. If it already has content the onus is on the caller
-to ensure that the other parameters are consistent with it.</p><p>The staging directory <code>stagingDir</code> must be on the same partition as the bag store, so that an atomic
-move operation is possible.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Interface to a bag store. Use <a href="BagStore$.html#apply(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStoreImpl" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#apply">the constructor on the companion object</a> to create an instance to work with.</p><h3> Bag store operations </h3><p>The methods of this trait implement some of the operations as defined on the Definitions page of the bag store project:</p><ul><li><code>ADD</code>: <a href="#add(bag:better.files.File,optUuid:Option[java.util.UUID],move:Boolean):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#add">BagStore.add</a></li><li><code>GET</code>: the various overloads of get</li><li><code>ENUM</code> (for bags): <a href="#enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#enum">BagStore.enum</a></li></ul><p>The other operations are defined in <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a> and its subclasses. To retrieve an item object, use one of overloads of <code>get</code> passing it the
+appropriate item-id. Use the item object to access the properties of corresponding bag or file in the bag store, or to perform one of the
+operations on it:</p><ul><li><code>ENUM</code> (for files in a bag): <a href="BagItem.html#enum(includeRegularFiles:Boolean,includeDirectories:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]]]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#enum">BagItem.enum</a></li><li><code>DEACTIVATE</code>: <a href="BagItem.html#deactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#deactivate">BagItem.deactivate</a></li><li><code>REACTIVATE</code>: <a href="BagItem.html#reactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#reactivate">BagItem.reactivate</a></li><li><code>ERASE</code>: <a href="RegularFileItem.html#erase(authority:String,reason:String):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.RegularFileItem#erase">RegularFileItem.erase</a></li></ul><h3> Utility functions </h3><p>Additionally, some utility function are provided:</p><ul><li><a href="#verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#verify">verify</a> - to verify that a bag store is consistent</li><li><a href="#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#prune">prune</a> - to minimize a bag before adding it to this bag store</li><li><a href="#complete(bag:better.files.File):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#complete">complete</a> - to complete a minimized bag</li></ul><h3> Example code </h3><pre><span class="kw">val</span> bagStore = BagStore(File(<span class="lit">"/data/bagstore"</span>), File(<span class="lit">"/data/staging"</span>))
+<span class="kw">val</span> bagToAdd = File(<span class="lit">"/home/jdoe/bag1"</span>)
+
+<span class="kw">for</span> {
+  <span class="cmt">// Replace files already in bag store with fetch-includes</span>
+  _ <span class="kw">&lt;-</span> bagStore.prune(bagToAdd)
+  <span class="cmt">// Double check that bagToAdd is virtually-valid (will also be done by add)</span>
+  virtValid <span class="kw">&lt;-</span> bagStore.isVirtuallyValid(bagToAdd)
+  <span class="cmt">// Add it to the bag store</span>
+  id <span class="kw">&lt;-</span> bagStore.add(File(<span class="lit">"/home/jdoe/bag1"</span>))
+  <span class="cmt">// Check that you can retrieve it</span>
+  item <span class="kw">&lt;-</span> bagStore.get(id)
+  <span class="cmt">// Where is the bag stored?</span>
+  location <span class="kw">&lt;-</span> item.getLocation
+  <span class="cmt">// Print the location</span>
+  _ = println(location)
+  <span class="cmt">// Deactivate the bag</span>
+  _ <span class="kw">&lt;-</span> item.deactivate()
+} <span class="kw">yield</span> ()</pre></div><div class="toggleContainer block">
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span>, <span class="extype" name="com.typesafe.scalalogging.LazyLogging">LazyLogging</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -332,7 +349,7 @@ move operation is possible.
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="nl.knaw.dans.lib.bagstore.BagStore"><span>BagStore</span></li><li class="in" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging"><span>DebugEnhancedLogging</span></li><li class="in" name="com.typesafe.scalalogging.LazyLogging"><span>LazyLogging</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="nl.knaw.dans.lib.bagstore.BagStore"><span>BagStore</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -350,33 +367,223 @@ move operation is possible.
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="nl.knaw.dans.lib.bagstore.BagStore#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStore"></a><a id="&lt;init&gt;:BagStore"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#&lt;init&gt;(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStore" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
-      </span>
-      <span class="symbol">
-        <span class="name">BagStore</span><span class="params">(<span name="baseDir">baseDir: <span class="extype" name="better.files.File">File</span></span>, <span name="stagingDir">stagingDir: <span class="extype" name="better.files.File">File</span></span>, <span name="slashPattern">slashPattern: <a href="package$$SlashPattern.html" class="extype" name="nl.knaw.dans.lib.bagstore.SlashPattern">SlashPattern</a> = <span class="symbol">SlashPattern(2, 30)</span></span>, <span name="bagDirPermissions">bagDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="defval" name="PosixFilePermissions.fromString(&quot;r-xr-xr-x&quot;).asScala.toSet">...</span></span>, <span name="bagFilePermissions">bagFilePermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="defval" name="PosixFilePermissions.fromString(&quot;r--r--r--&quot;).asScala.toSet">...</span></span>, <span name="containerDirPermissions">containerDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="defval" name="PosixFilePermissions.fromString(&quot;rwxr-xr-x&quot;).asScala.toSet">...</span></span>, <span name="localFileBaseUri">localFileBaseUri: <span class="extype" name="java.net.URI">URI</span> = <span class="symbol">new URI(&quot;http://localhost/&quot;)</span></span>)</span>
-      </span>
-      
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">baseDir</dt><dd class="cmt"><p>the base directory of the bag store</p></dd><dt class="param">stagingDir</dt><dd class="cmt"><p>the directory to use for staging bags</p></dd><dt class="param">slashPattern</dt><dd class="cmt"><p>the slash pattern to use when creating containing directories for the bag</p></dd><dt class="param">bagDirPermissions</dt><dd class="cmt"><p>the permissions to set on directories added to the bag store</p></dd><dt class="param">bagFilePermissions</dt><dd class="cmt"><p>the permissions to set on regular files added to the bag store</p></dd><dt class="param">containerDirPermissions</dt><dd class="cmt"><p>the permissions to set on container directories and their parents inside the bag store</p></dd></dl></div>
-    </li></ol>
-            </div>
-
         
 
         
 
         <div class="values members">
-              <h3>Value Members</h3>
+              <h3>Abstract Value Members</h3>
+              <ol><li name="nl.knaw.dans.lib.bagstore.BagStore#add" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="add(bag:better.files.File,optUuid:Option[java.util.UUID],move:Boolean):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]"></a><a id="add(File,Option[UUID],Boolean):Try[BagItem]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#add(bag:better.files.File,optUuid:Option[java.util.UUID],move:Boolean):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">add</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>, <span name="optUuid">optUuid: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.util.UUID">UUID</span>] = <span class="symbol">None</span></span>, <span name="move">move: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Adds a bag to the bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Adds a bag to the bag store. A UUID to use as bag-id may be provided. If it is not, it is
+generated by the function. The bag must be virtually-valid in the context of this bag store,
+otherwise the function fails. Note that it may be possible to <a href="#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#prune">prune</a> the bag before adding it.</p><p>Currently, only unserialized bags are supported.</p><p>By default, a copy of <code>bag</code> will be staged to <code>stagingDir</code>. However, the caller can skip this
+step and have <code>bag</code> be moved into the bag store from its current location. In that case, the current
+location must be on the same partition as the bag store itself, so that an atomic move operation is
+possible.</p><p>A hidden file cannot be added to the bag store, as it would result in a bag that starts off inactive.
+</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to add</p></dd><dt class="param">optUuid</dt><dd class="cmt"><p>the UUID to use as bag-id</p></dd><dt class="param">move</dt><dd class="cmt"><p>move (instead of copy) the bag into the bag store*</p></dd><dt>returns</dt><dd class="cmt"><p>the added <a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a></p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#complete" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="complete(bag:better.files.File):scala.util.Try[Unit]"></a><a id="complete(File):Try[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#complete(bag:better.files.File):scala.util.Try[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">complete</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt"></p>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#enum" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]"></a><a id="enum(Boolean,Boolean):Try[Stream[Try[BagItem]]]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enum</span><span class="params">(<span name="includeActive">includeActive: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="includeInactive">includeInactive: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]]]</span>
+      </span>
+      
+      
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="get(localFileUri:java.net.URI):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]"></a><a id="get(URI):Try[RegularFileItem]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(localFileUri:java.net.URI):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="localFileUri">localFileUri: <span class="extype" name="java.net.URI">URI</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>]</span>
+      </span>
+      
+      
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="get(regularFileId:nl.knaw.dans.lib.bagstore.RegularFileId):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]"></a><a id="get(RegularFileId):Try[RegularFileItem]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(regularFileId:nl.knaw.dans.lib.bagstore.RegularFileId):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="regularFileId">regularFileId: <a href="RegularFileId.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileId">RegularFileId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>]</span>
+      </span>
+      
+      
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="get(directoryId:nl.knaw.dans.lib.bagstore.DirectoryId):scala.util.Try[nl.knaw.dans.lib.bagstore.DirectoryItem]"></a><a id="get(DirectoryId):Try[DirectoryItem]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(directoryId:nl.knaw.dans.lib.bagstore.DirectoryId):scala.util.Try[nl.knaw.dans.lib.bagstore.DirectoryItem]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="directoryId">directoryId: <a href="DirectoryId.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryId">DirectoryId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="DirectoryItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryItem">DirectoryItem</a>]</span>
+      </span>
+      
+      
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="get(bagId:nl.knaw.dans.lib.bagstore.BagId):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]"></a><a id="get(BagId):Try[BagItem]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(bagId:nl.knaw.dans.lib.bagstore.BagId):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="bagId">bagId: <a href="BagId.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagId">BagId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]</span>
+      </span>
+      
+      
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="get(fileId:nl.knaw.dans.lib.bagstore.FileId):scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]"></a><a id="get(FileId):Try[FileItem]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(fileId:nl.knaw.dans.lib.bagstore.FileId):scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="fileId">fileId: <a href="FileId.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileId">FileId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="FileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileItem">FileItem</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt"></p>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="get(itemId:nl.knaw.dans.lib.bagstore.ItemId):scala.util.Try[nl.knaw.dans.lib.bagstore.Item]"></a><a id="get(ItemId):Try[Item]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(itemId:nl.knaw.dans.lib.bagstore.ItemId):scala.util.Try[nl.knaw.dans.lib.bagstore.Item]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="itemId">itemId: <a href="ItemId.html" class="extype" name="nl.knaw.dans.lib.bagstore.ItemId">ItemId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Returns an <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns an <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>. The type of the returned object is a subclass of <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>. If you know what
+type of item you expect, you may use one the overloaded methods.
+</p></div><dl class="paramcmts block"><dt class="param">itemId</dt><dd class="cmt"><p>the item-id of the item to get</p></dd><dt>returns</dt><dd class="cmt"><p>the item, if found</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#isVirtuallyValid" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="isVirtuallyValid(bag:better.files.File):scala.util.Try[Either[String,Unit]]"></a><a id="isVirtuallyValid(File):Try[Either[String,Unit]]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#isVirtuallyValid(bag:better.files.File):scala.util.Try[Either[String,Unit]]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isVirtuallyValid</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Either">Either</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Determines whether <code>bag</code> is virtually-valid with respect to this bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Determines whether <code>bag</code> is virtually-valid with respect to this bag store. The bag may or may not be
+stored in the bag store currently.
+</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to validate</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#prune" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]"></a><a id="prune(File,BagId*):Try[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">prune</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>, <span name="refBagId">refBagId: <a href="BagId.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagId">BagId</a>*</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      <p class="shortcomment cmt">Removes from <code>bag</code> the payload files which are found in one of the reference bags and adds a fetch reference to
+the file in that reference bag.</p><div class="fullcomment"><div class="comment cmt"><p>Removes from <code>bag</code> the payload files which are found in one of the reference bags and adds a fetch reference to
+the file in that reference bag. The result is a smaller bag, which is still virtually valid relative to this
+bag store.
+</p></div></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#verify" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]"></a><a id="verify(Boolean):Try[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">verify</span><span class="params">(<span name="failOnFirstViolation">failOnFirstViolation: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      
+    </li></ol>
+            </div>
+
+        <div class="values members">
+              <h3>Concrete Value Members</h3>
               <ol>
                 <li name="scala.AnyRef#!=" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a><a id="!=(Any):Boolean"></a>
@@ -426,28 +633,6 @@ move operation is possible.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#add" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="add(bag:better.files.File,optUuid:Option[java.util.UUID],move:Boolean):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]"></a><a id="add(File,Option[UUID],Boolean):Try[BagItem]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#add(bag:better.files.File,optUuid:Option[java.util.UUID],move:Boolean):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">add</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>, <span name="optUuid">optUuid: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.util.UUID">UUID</span>] = <span class="symbol">None</span></span>, <span name="move">move: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Adds a bag to the bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Adds a bag to the bag store. A UUID to use as bag-id may be provided. If it is not, it is
-generated by the function. The bag must be virtually-valid in the context of this bag store,
-otherwise the function fails. Note that it may be possible to <a href="#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#prune">prune</a> the bag before adding it.</p><p>Currently, only unserialized bags are supported.</p><p>By default, a copy of <code>bag</code> will be staged to <code>stagingDir</code>. However, the caller can skip this
-step and have <code>bag</code> be moved into the bag store from its current location. In that case, the current
-location must be on the same partition as the bag store itself, so that an atomic move operation is
-possible.</p><p>A hidden file cannot be added to the bag store, as it would result in a bag that starts off inactive.
-</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to add</p></dd><dt class="param">optUuid</dt><dd class="cmt"><p>the UUID to use as bag-id</p></dd><dt class="param">move</dt><dd class="cmt"><p>move (instead of copy) the bag into the bag store*</p></dd><dt>returns</dt><dd class="cmt"><p>the added <a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a></p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">
@@ -486,54 +671,6 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#complete" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="complete(bag:better.files.File):scala.util.Try[Unit]"></a><a id="complete(File):Try[Unit]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#complete(bag:better.files.File):scala.util.Try[Unit]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">complete</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt"></p>
-    </li><li name="nl.knaw.dans.lib.logging.DebugEnhancedLogging#debug" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="debug(msg:String)(implicitenclosing:sourcecode.Name):Unit"></a><a id="debug(String)(Name):Unit"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#debug(msg:String)(implicitenclosing:sourcecode.Name):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">debug</span><span class="params">(<span name="msg">msg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="enclosing">enclosing: <span class="extype" name="sourcecode.Name">Name</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>DebugEnhancedLogging</dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#enum" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]"></a><a id="enum(Boolean,Boolean):Try[Stream[Try[BagItem]]]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">enum</span><span class="params">(<span name="includeActive">includeActive: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="includeInactive">includeInactive: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]]]</span>
-      </span>
-      
-      
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -588,105 +725,6 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="get(localFileUri:java.net.URI):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]"></a><a id="get(URI):Try[RegularFileItem]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(localFileUri:java.net.URI):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="localFileUri">localFileUri: <span class="extype" name="java.net.URI">URI</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>]</span>
-      </span>
-      
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="get(regularFileId:nl.knaw.dans.lib.bagstore.RegularFileId):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]"></a><a id="get(RegularFileId):Try[RegularFileItem]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(regularFileId:nl.knaw.dans.lib.bagstore.RegularFileId):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="regularFileId">regularFileId: <a href="RegularFileId.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileId">RegularFileId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>]</span>
-      </span>
-      
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="get(directoryId:nl.knaw.dans.lib.bagstore.DirectoryId):scala.util.Try[nl.knaw.dans.lib.bagstore.DirectoryItem]"></a><a id="get(DirectoryId):Try[DirectoryItem]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(directoryId:nl.knaw.dans.lib.bagstore.DirectoryId):scala.util.Try[nl.knaw.dans.lib.bagstore.DirectoryItem]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="directoryId">directoryId: <a href="DirectoryId.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryId">DirectoryId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="DirectoryItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryItem">DirectoryItem</a>]</span>
-      </span>
-      
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="get(fileId:nl.knaw.dans.lib.bagstore.FileId):scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]"></a><a id="get(FileId):Try[FileItem]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(fileId:nl.knaw.dans.lib.bagstore.FileId):scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="fileId">fileId: <a href="FileId.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileId">FileId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="FileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileItem">FileItem</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt"></p>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="get(bagId:nl.knaw.dans.lib.bagstore.BagId):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]"></a><a id="get(BagId):Try[BagItem]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(bagId:nl.knaw.dans.lib.bagstore.BagId):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="bagId">bagId: <a href="BagId.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagId">BagId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Returns a <a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>.
-</p></div><dl class="paramcmts block"><dt class="param">bagId</dt><dd class="cmt"><p>the bag-id of the bag to return</p></dd><dt>returns</dt><dd class="cmt"><p>the bag, if found</p></dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="get(itemId:nl.knaw.dans.lib.bagstore.ItemId):scala.util.Try[nl.knaw.dans.lib.bagstore.Item]"></a><a id="get(ItemId):Try[Item]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(itemId:nl.knaw.dans.lib.bagstore.ItemId):scala.util.Try[nl.knaw.dans.lib.bagstore.Item]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">get</span><span class="params">(<span name="itemId">itemId: <a href="ItemId.html" class="extype" name="nl.knaw.dans.lib.bagstore.ItemId">ItemId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Returns an <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns an <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>. The type of the returned object is a subclass of <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a>. If you know what
-type of item you expect, you may use one the overloaded methods.
-</p></div><dl class="paramcmts block"><dt class="param">itemId</dt><dd class="cmt"><p>the item-id of the item to get</p></dd><dt>returns</dt><dd class="cmt"><p>the item, if found</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <span class="permalink">
@@ -735,40 +773,6 @@ type of item you expect, you may use one the overloaded methods.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#isVirtuallyValid" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="isVirtuallyValid(bag:better.files.File):scala.util.Try[Either[String,Unit]]"></a><a id="isVirtuallyValid(File):Try[Either[String,Unit]]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#isVirtuallyValid(bag:better.files.File):scala.util.Try[Either[String,Unit]]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">isVirtuallyValid</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Either">Either</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Determines whether <code>bag</code> is virtually-valid with respect to this bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Determines whether <code>bag</code> is virtually-valid with respect to this bag store. The bag may or may not be
-stored in the bag store currently.
-</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to validate</p></dd></dl></div>
-    </li><li name="com.typesafe.scalalogging.LazyLogging#logger" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="logger:com.typesafe.scalalogging.Logger"></a><a id="logger:Logger"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#logger:com.typesafe.scalalogging.Logger" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">lazy val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">logger</span><span class="result">: <span class="extype" name="com.typesafe.scalalogging.Logger">Logger</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>LazyLogging</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -817,26 +821,6 @@ stored in the bag store currently.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#prune" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]"></a><a id="prune(File,BagId*):Try[Unit]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">prune</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>, <span name="refBagId">refBagId: <a href="BagId.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagId">BagId</a>*</span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Removes from <code>bag</code> the payload files which are found in one of the reference bags and adds a fetch reference to
-the file in that reference bag.</p><div class="fullcomment"><div class="comment cmt"><p>Removes from <code>bag</code> the payload files which are found in one of the reference bags and adds a fetch reference to
-the file in that reference bag. The result is a smaller bag, which is still virtually valid relative to this
-bag store.
-</p></div></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -869,42 +853,6 @@ bag store.
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.logging.DebugEnhancedLogging#trace" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="trace[V](value:sourcecode.Text[V])(implicitenclosing:sourcecode.Name):Unit"></a><a id="trace[V](Text[V])(Name):Unit"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#trace[V](value:sourcecode.Text[V])(implicitenclosing:sourcecode.Name):Unit" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">trace</span><span class="tparams">[<span name="V">V</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="sourcecode.Text">Text</span>[<span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging.trace.V">V</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="enclosing">enclosing: <span class="extype" name="sourcecode.Name">Name</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>DebugEnhancedLogging</dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#verify" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]"></a><a id="verify(Boolean):Try[Unit]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">verify</span><span class="params">(<span name="failOnFirstViolation">failOnFirstViolation: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
-      </span>
-      
-      <p class="shortcomment cmt">Verifies this bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Verifies this bag store. The following invariants are checked (in this order):</p><p>1. The slash-pattern is maintained throughout the bag store.
-2. Every container only has one file in it.
-3. All bags are virtually-valid.</p><p>If any of these invariants is violated the bag store is declared corrupt. By default the function will
-stop at the first violation, but this behavior can be overridden.</p><p>Note that, depending on the size of the bag store, this function may take a long time to complete.
-</p></div><dl class="paramcmts block"><dt class="param">failOnFirstViolation</dt><dd class="cmt"><p>whether to stop checking after encountering the first violation</p></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
@@ -981,11 +929,7 @@ stop at the first violation, but this behavior can be overridden.</p><p>Note tha
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">
-              <h3>Inherited from <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span></h3>
-            </div><div class="parent" name="com.typesafe.scalalogging.LazyLogging">
-              <h3>Inherited from <span class="extype" name="com.typesafe.scalalogging.LazyLogging">LazyLogging</span></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

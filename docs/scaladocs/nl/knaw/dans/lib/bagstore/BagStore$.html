@@ -187,8 +187,8 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <a class="object" href="" title=""></a>
-                        <a class="class" href="BagStore.html" title="Represents an existing bag store."></a>
-                        <a href="BagStore.html" title="Represents an existing bag store.">
+                        <a class="trait" href="BagStore.html" title="Interface to a bag store."></a>
+                        <a href="BagStore.html" title="Interface to a bag store.">
                           BagStore
                         </a>
                       </li><li class="current-entities indented5">
@@ -276,15 +276,15 @@
           <div id="content">
             <body class="object value">
       <div id="definition">
-        <a href="BagStore.html" title="See companion class"><div class="big-circle object-companion-class">o</div></a>
+        <a href="BagStore.html" title="See companion trait"><div class="big-circle object-companion-trait">o</div></a>
         <p id="owner"><a href="../../../../index.html" class="extype" name="nl">nl</a>.<a href="../../../index.html" class="extype" name="nl.knaw">knaw</a>.<a href="../../index.html" class="extype" name="nl.knaw.dans">dans</a>.<a href="../index.html" class="extype" name="nl.knaw.dans.lib">lib</a>.<a href="index.html" class="extype" name="nl.knaw.dans.lib.bagstore">bagstore</a></p>
-        <h1><a href="BagStore.html" title="See companion class">BagStore</a><span class="permalink">
+        <h1><a href="BagStore.html" title="See companion trait">BagStore</a><span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore$.html" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span></h1>
         <h3><span class="morelinks"><div>
-            Companion <a href="BagStore.html" title="See companion class">class BagStore</a>
+            Companion <a href="BagStore.html" title="See companion trait">trait BagStore</a>
           </div></span></h3>
       </div>
 
@@ -404,10 +404,10 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="apply(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStore"></a><a id="apply(File,File,SlashPattern,Set[PosixFilePermission],Set[PosixFilePermission],Set[PosixFilePermission],URI):BagStore"></a>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#apply" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStoreImpl"></a><a id="apply(File,File,SlashPattern,Set[PosixFilePermission],Set[PosixFilePermission],Set[PosixFilePermission],URI):BagStoreImpl"></a>
       <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore$.html#apply(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStore" title="Permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore$.html#apply(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStoreImpl" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -416,10 +416,13 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="baseDir">baseDir: <span class="extype" name="better.files.File">File</span></span>, <span name="stagingDir">stagingDir: <span class="extype" name="better.files.File">File</span></span>, <span name="slashPattern">slashPattern: <a href="package$$SlashPattern.html" class="extype" name="nl.knaw.dans.lib.bagstore.SlashPattern">SlashPattern</a> = <span class="symbol"><span class="name"><a href="#defaultSlashPattern:nl.knaw.dans.lib.bagstore.SlashPattern">defaultSlashPattern</a></span></span></span>, <span name="bagDirPermissions">bagDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="symbol"><span class="name"><a href="#defaultBagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission]">defaultBagDirPermissions</a></span></span></span>, <span name="bagFilePermissions">bagFilePermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="symbol"><span class="name"><a href="#defaultBagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission]">defaultBagFilePermissions</a></span></span></span>, <span name="containerDirPermissions">containerDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="symbol"><span class="name"><a href="#defaultContainerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission]">defaultContainerDirPermissions</a></span></span></span>, <span name="localFileBaseUri">localFileBaseUri: <span class="extype" name="java.net.URI">URI</span> = <span class="symbol"><span class="name"><a href="#defaultLocalFileBaseUri:java.net.URI">defaultLocalFileBaseUri</a></span></span></span>)</span><span class="result">: <a href="BagStore.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagStore">BagStore</a></span>
+        <span class="name">apply</span><span class="params">(<span name="baseDir">baseDir: <span class="extype" name="better.files.File">File</span></span>, <span name="stagingDir">stagingDir: <span class="extype" name="better.files.File">File</span></span>, <span name="slashPattern">slashPattern: <a href="package$$SlashPattern.html" class="extype" name="nl.knaw.dans.lib.bagstore.SlashPattern">SlashPattern</a> = <span class="symbol"><span class="name"><a href="#defaultSlashPattern:nl.knaw.dans.lib.bagstore.SlashPattern">defaultSlashPattern</a></span></span></span>, <span name="bagDirPermissions">bagDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="symbol"><span class="name"><a href="#defaultBagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission]">defaultBagDirPermissions</a></span></span></span>, <span name="bagFilePermissions">bagFilePermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="symbol"><span class="name"><a href="#defaultBagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission]">defaultBagFilePermissions</a></span></span></span>, <span name="containerDirPermissions">containerDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="symbol"><span class="name"><a href="#defaultContainerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission]">defaultContainerDirPermissions</a></span></span></span>, <span name="localFileBaseUri">localFileBaseUri: <span class="extype" name="java.net.URI">URI</span> = <span class="symbol"><span class="name"><a href="#defaultLocalFileBaseUri:java.net.URI">defaultLocalFileBaseUri</a></span></span></span>)</span><span class="result">: <span class="extype" name="nl.knaw.dans.lib.bagstore.BagStoreImpl">BagStoreImpl</span></span>
       </span>
       
-      
+      <p class="shortcomment cmt">Creates an object that represents an existing bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Creates an object that represents an existing bag store. The bag store may be empty. If it already has content the onus is on the caller
+to ensure that the other parameters are consistent with it.</p><p>The staging directory <code>stagingDir</code> must be on the same partition as the bag store, so that an atomic
+move operation is possible.
+</p></div><dl class="paramcmts block"><dt class="param">baseDir</dt><dd class="cmt"><p>the base directory of the bag store</p></dd><dt class="param">stagingDir</dt><dd class="cmt"><p>the directory to use for staging bags</p></dd><dt class="param">slashPattern</dt><dd class="cmt"><p>the slash pattern to use when creating containing directories for the bag</p></dd><dt class="param">bagDirPermissions</dt><dd class="cmt"><p>the permissions to set on directories added to the bag store</p></dd><dt class="param">bagFilePermissions</dt><dd class="cmt"><p>the permissions to set on regular files added to the bag store</p></dd><dt class="param">containerDirPermissions</dt><dd class="cmt"><p>the permissions to set on container directories and their parents inside the bag store</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <span class="permalink">

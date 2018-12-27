@@ -27,7 +27,7 @@ import scala.util.Try
 /**
  * A Bag that is stored in a BagStore.
  */
-case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
+case class BagItem (bagStore: BagStoreImpl, uuid: UUID) extends Item {
   private lazy val maybeInspector = getLocation.map(BagInspector(_))
 
   override def getId: ItemId = BagId(uuid)
@@ -52,6 +52,10 @@ case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
    */
   def enum(includeRegularFiles: Boolean = true, includeDirectories: Boolean = false): Try[Stream[Try[FileItem]]] = ???
 
+
+  def deactivate(): Try[Unit] = ???
+
+  def reactivate(): Try[Unit] = ???
 
   /**
    * A Bag is virtually-valid if:
@@ -79,7 +83,4 @@ case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
       optUri <- Try { fetchItems.get(path) }
     } yield optUri.map(_.uri)
   }
-
-  def getStream(packaging: Packaging.Packaging): Try[InputStream] = ???
-
 }

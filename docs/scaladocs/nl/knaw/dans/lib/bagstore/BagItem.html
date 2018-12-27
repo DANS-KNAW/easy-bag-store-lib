@@ -187,8 +187,8 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <a class="object" href="BagStore$.html" title=""></a>
-                        <a class="class" href="BagStore.html" title="Represents an existing bag store."></a>
-                        <a href="BagStore.html" title="Represents an existing bag store.">
+                        <a class="trait" href="BagStore.html" title="Interface to a bag store."></a>
+                        <a href="BagStore.html" title="Interface to a bag store.">
                           BagStore
                         </a>
                       </li><li class="current-entities indented5">
@@ -292,7 +292,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">BagItem</span><span class="params">(<span name="bagStore">bagStore: <a href="BagStore.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagStore">BagStore</a></span>, <span name="uuid">uuid: <span class="extype" name="java.util.UUID">UUID</span></span>)</span><span class="result"> extends <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">BagItem</span><span class="params">(<span name="bagStore">bagStore: <span class="extype" name="nl.knaw.dans.lib.bagstore.BagStoreImpl">BagStoreImpl</span></span>, <span name="uuid">uuid: <span class="extype" name="java.util.UUID">UUID</span></span>)</span><span class="result"> extends <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -349,9 +349,9 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="nl.knaw.dans.lib.bagstore.BagItem#&lt;init&gt;" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(bagStore:nl.knaw.dans.lib.bagstore.BagStore,uuid:java.util.UUID):nl.knaw.dans.lib.bagstore.BagItem"></a><a id="&lt;init&gt;:BagItem"></a>
+      <a id="&lt;init&gt;(bagStore:nl.knaw.dans.lib.bagstore.BagStoreImpl,uuid:java.util.UUID):nl.knaw.dans.lib.bagstore.BagItem"></a><a id="&lt;init&gt;:BagItem"></a>
       <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#&lt;init&gt;(bagStore:nl.knaw.dans.lib.bagstore.BagStore,uuid:java.util.UUID):nl.knaw.dans.lib.bagstore.BagItem" title="Permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#&lt;init&gt;(bagStore:nl.knaw.dans.lib.bagstore.BagStoreImpl,uuid:java.util.UUID):nl.knaw.dans.lib.bagstore.BagItem" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -360,7 +360,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">BagItem</span><span class="params">(<span name="bagStore">bagStore: <a href="BagStore.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagStore">BagStore</a></span>, <span name="uuid">uuid: <span class="extype" name="java.util.UUID">UUID</span></span>)</span>
+        <span class="name">BagItem</span><span class="params">(<span name="bagStore">bagStore: <span class="extype" name="nl.knaw.dans.lib.bagstore.BagStoreImpl">BagStoreImpl</span></span>, <span name="uuid">uuid: <span class="extype" name="java.util.UUID">UUID</span></span>)</span>
       </span>
       
       
@@ -439,9 +439,9 @@
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="nl.knaw.dans.lib.bagstore.BagItem#bagStore" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="bagStore:nl.knaw.dans.lib.bagstore.BagStore"></a><a id="bagStore:BagStore"></a>
+      <a id="bagStore:nl.knaw.dans.lib.bagstore.BagStoreImpl"></a><a id="bagStore:BagStoreImpl"></a>
       <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#bagStore:nl.knaw.dans.lib.bagstore.BagStore" title="Permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#bagStore:nl.knaw.dans.lib.bagstore.BagStoreImpl" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -450,7 +450,7 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">bagStore</span><span class="result">: <a href="BagStore.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagStore">BagStore</a></span>
+        <span class="name">bagStore</span><span class="result">: <span class="extype" name="nl.knaw.dans.lib.bagstore.BagStoreImpl">BagStoreImpl</span></span>
       </span>
       
       
@@ -476,6 +476,22 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagItem#deactivate" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="deactivate():scala.util.Try[Unit]"></a><a id="deactivate():Try[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#deactivate():scala.util.Try[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">deactivate</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      
     </li><li name="nl.knaw.dans.lib.bagstore.BagItem#enum" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="enum(includeRegularFiles:Boolean,includeDirectories:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]]]"></a><a id="enum(Boolean,Boolean):Try[Stream[Try[FileItem]]]"></a>
       <span class="permalink">
@@ -598,22 +614,6 @@ the failure and the result must be regarded as incomplete.</p></div><dl class="p
       
       <p class="shortcomment cmt">The location where the item is stored.</p><div class="fullcomment"><div class="comment cmt"><p>The location where the item is stored.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a> → <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a></dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagItem#getStream" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getStream(packaging:BagItem.this.Packaging.Packaging):scala.util.Try[java.io.InputStream]"></a><a id="getStream(Packaging):Try[InputStream]"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#getStream(packaging:BagItem.this.Packaging.Packaging):scala.util.Try[java.io.InputStream]" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getStream</span><span class="params">(<span name="packaging">packaging: <a href="Item$Packaging$.html#Packaging=nl.knaw.dans.lib.bagstore.Item.Packaging.Value" class="extmbr" name="nl.knaw.dans.lib.bagstore.Item.Packaging.Packaging">Packaging</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="java.io.InputStream">InputStream</span>]</span>
-      </span>
-      
-      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <span class="permalink">
@@ -697,6 +697,22 @@ the failure and the result must be regarded as incomplete.</p></div><dl class="p
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagItem#reactivate" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="reactivate():scala.util.Try[Unit]"></a><a id="reactivate():Try[Unit]"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagItem.html#reactivate():scala.util.Try[Unit]" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">reactivate</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+      </span>
+      
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a><a id="synchronized[T0](⇒T0):T0"></a>
       <span class="permalink">
@@ -795,24 +811,6 @@ the failure and the result must be regarded as incomplete.</p></div><dl class="p
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.Item.Packaging" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="Packaging"></a><a id="Packaging:Packaging"></a>
-      <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/Item.html#Packaging" title="Permalink">
-        <i class="material-icons"></i>
-      </a>
-    </span>
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a title="" href="Item$Packaging$.html">
-              <span class="name">Packaging</span>
-            </a><span class="result"> extends <span class="extype" name="scala.Enumeration">Enumeration</span></span>
-      </span>
-      
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a></dd></dl></div>
     </li>
               </ol>
             </div>

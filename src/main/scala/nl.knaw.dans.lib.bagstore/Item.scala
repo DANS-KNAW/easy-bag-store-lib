@@ -22,31 +22,10 @@ import better.files.File
 import scala.util.Try
 
 /**
- * An item is a bag, directory or regular file in a bag store. An item *always* exists in the context
+ * An item is a bag, directory or regular file in a bag store. An item ''always'' exists in the context
  * of a bag store.
  */
 trait Item {
-  object Packaging extends Enumeration {
-    type Packaging = Value
-    /*
-     * No packaging is applied to the data, i.e. it is returned unwrapped.
-     */
-    val NONE: Packaging = Value
-
-    /*
-     * The data is packaged as TAR stream.
-     */
-    val TAR: Packaging = Value
-
-    /*
-     * The data is packaged as a 7z stream.
-     */
-    val _7Z: Packaging = Value
-  }
-
-  import Packaging._
-
-
   /**
    * The item-id is the key you can use to look up this item in the bag store.
    *

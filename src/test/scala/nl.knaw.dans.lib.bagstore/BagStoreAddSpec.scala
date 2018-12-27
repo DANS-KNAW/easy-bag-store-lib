@@ -27,7 +27,7 @@ class BagStoreAddSpec extends ReadWriteTestSupportFixture {
   private val stagingDir = (testDir / "staging").createDirectories()
   private val bagDirPermissions = "rwx-w----"
   private val bagFilePermissions = "rwx-w--w-"
-  private val bagStore = new BagStore(baseDir, stagingDir,
+  private val bagStore = new BagStoreImpl(baseDir, stagingDir,
     /*
      * Set to something unusual, so that we can effectively test it, but not something that prevents
      * our user from deleting the data afterwards (e.g., during mvn clean).

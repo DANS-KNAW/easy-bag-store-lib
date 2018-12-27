@@ -185,8 +185,8 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <a class="object" href="BagStore$.html" title=""></a>
-                        <a class="class" href="BagStore.html" title="Represents an existing bag store."></a>
-                        <a href="BagStore.html" title="Represents an existing bag store.">
+                        <a class="trait" href="BagStore.html" title="Interface to a bag store."></a>
+                        <a href="BagStore.html" title="Interface to a bag store.">
                           BagStore
                         </a>
                       </li><li class="current-entities indented5">
@@ -398,7 +398,7 @@
       <span class="symbol">
         <a title="A Bag that is stored in a BagStore." href="BagItem.html">
               <span class="name">BagItem</span>
-            </a><span class="params">(<span name="bagStore">bagStore: <a href="BagStore.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagStore">BagStore</a></span>, <span name="uuid">uuid: <span class="extype" name="java.util.UUID">UUID</span></span>)</span><span class="result"> extends <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+            </a><span class="params">(<span name="bagStore">bagStore: <span class="extype" name="nl.knaw.dans.lib.bagstore.BagStoreImpl">BagStoreImpl</span></span>, <span name="uuid">uuid: <span class="extype" name="java.util.UUID">UUID</span></span>)</span><span class="result"> extends <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       
       <p class="shortcomment cmt">A Bag that is stored in a BagStore.</p>
@@ -420,27 +420,44 @@
       </span>
       
       
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BagStoreextendsDebugEnhancedLogging"></a><a id="BagStore:BagStore"></a>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="BagStoreextendsAnyRef"></a><a id="BagStore:BagStore"></a>
       <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/index.html#BagStoreextendsDebugEnhancedLogging" title="Permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/index.html#BagStoreextendsAnyRef" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a title="Represents an existing bag store." href="BagStore.html">
+        <a title="Interface to a bag store." href="BagStore.html">
               <span class="name">BagStore</span>
-            </a><span class="result"> extends <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span></span>
+            </a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       
-      <p class="shortcomment cmt">Represents an existing bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Represents an existing bag store. The bag store may be empty. If it already has content the onus is on the caller
-to ensure that the other parameters are consistent with it.</p><p>The staging directory <code>stagingDir</code> must be on the same partition as the bag store, so that an atomic
-move operation is possible.
-</p></div></div>
+      <p class="shortcomment cmt">Interface to a bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Interface to a bag store. Use <a href="BagStore$.html#apply(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStoreImpl" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#apply">the constructor on the companion object</a> to create an instance to work with.</p><h3> Bag store operations </h3><p>The methods of this trait implement some of the operations as defined on the Definitions page of the bag store project:</p><ul><li><code>ADD</code>: <a href="BagStore.html#add(bag:better.files.File,optUuid:Option[java.util.UUID],move:Boolean):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#add">BagStore.add</a></li><li><code>GET</code>: the various overloads of get</li><li><code>ENUM</code> (for bags): <a href="BagStore.html#enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#enum">BagStore.enum</a></li></ul><p>The other operations are defined in <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a> and its subclasses. To retrieve an item object, use one of overloads of <code>get</code> passing it the
+appropriate item-id. Use the item object to access the properties of corresponding bag or file in the bag store, or to perform one of the
+operations on it:</p><ul><li><code>ENUM</code> (for files in a bag): <a href="BagItem.html#enum(includeRegularFiles:Boolean,includeDirectories:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]]]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#enum">BagItem.enum</a></li><li><code>DEACTIVATE</code>: <a href="BagItem.html#deactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#deactivate">BagItem.deactivate</a></li><li><code>REACTIVATE</code>: <a href="BagItem.html#reactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#reactivate">BagItem.reactivate</a></li><li><code>ERASE</code>: <a href="RegularFileItem.html#erase(authority:String,reason:String):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.RegularFileItem#erase">RegularFileItem.erase</a></li></ul><h3> Utility functions </h3><p>Additionally, some utility function are provided:</p><ul><li><a href="BagStore.html#verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#verify">verify</a> - to verify that a bag store is consistent</li><li><a href="BagStore.html#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#prune">prune</a> - to minimize a bag before adding it to this bag store</li><li><a href="BagStore.html#complete(bag:better.files.File):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#complete">complete</a> - to complete a minimized bag</li></ul><h3> Example code </h3><pre><span class="kw">val</span> bagStore = BagStore(File(<span class="lit">"/data/bagstore"</span>), File(<span class="lit">"/data/staging"</span>))
+<span class="kw">val</span> bagToAdd = File(<span class="lit">"/home/jdoe/bag1"</span>)
+
+<span class="kw">for</span> {
+  <span class="cmt">// Replace files already in bag store with fetch-includes</span>
+  _ <span class="kw">&lt;-</span> bagStore.prune(bagToAdd)
+  <span class="cmt">// Double check that bagToAdd is virtually-valid (will also be done by add)</span>
+  virtValid <span class="kw">&lt;-</span> bagStore.isVirtuallyValid(bagToAdd)
+  <span class="cmt">// Add it to the bag store</span>
+  id <span class="kw">&lt;-</span> bagStore.add(File(<span class="lit">"/home/jdoe/bag1"</span>))
+  <span class="cmt">// Check that you can retrieve it</span>
+  item <span class="kw">&lt;-</span> bagStore.get(id)
+  <span class="cmt">// Where is the bag stored?</span>
+  location <span class="kw">&lt;-</span> item.getLocation
+  <span class="cmt">// Print the location</span>
+  _ = println(location)
+  <span class="cmt">// Deactivate the bag</span>
+  _ <span class="kw">&lt;-</span> item.deactivate()
+} <span class="kw">yield</span> ()</pre></div></div>
     </li><li name="nl.knaw.dans.lib.bagstore.CorruptBagStoreException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CorruptBagStoreExceptionextendsExceptionwithProductwithSerializable"></a><a id="CorruptBagStoreException:CorruptBagStoreException"></a>
       <span class="permalink">
@@ -566,7 +583,7 @@ move operation is possible.
             </a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       
-      <p class="shortcomment cmt">An item is a bag, directory or regular file in a bag store.</p><div class="fullcomment"><div class="comment cmt"><p>An item is a bag, directory or regular file in a bag store. An item *always* exists in the context
+      <p class="shortcomment cmt">An item is a bag, directory or regular file in a bag store.</p><div class="fullcomment"><div class="comment cmt"><p>An item is a bag, directory or regular file in a bag store. An item <i>always</i> exists in the context
 of a bag store.
 </p></div></div>
     </li><li name="nl.knaw.dans.lib.bagstore.ItemId" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">

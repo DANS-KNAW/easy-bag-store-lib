@@ -129,18 +129,15 @@ BagStore.
 
 Operations
 ----------
-On a BagStore the following operations are allowed. They have been subdivided into two groups. The [core]
-operations are the minimum you will need to manage a BagStore, the [extra] operations may be needed to
-implement other use cases efficiently.
+On a BagStore the following operations are allowed.
 
-### Core
 * `ADD` - add a virtually-valid Bag to the BagStore.
 * `ENUM` - enumerate all the Bags in the BagStore.
 * `GET` - copy a Bag or an non-packaged RegularFile from the BagStore.
 * `DEACTIVATE` - mark a Bag as inactive.
 * `REACTIVATE` - reverse a deactivation.
 
-Note that this means that Bags are immutable. To support updates to Bags, add metadata that records 
+Note that this means that Bags are immutable. To support updates to Bags, add metadata that records
 that a Bag is part of a sequence of Bags, that together form the revision history of one logical 
 (and mutable) Bag. See for an example implementation the [easy-bag-index] project.
 
@@ -149,14 +146,12 @@ by prepending its name with a dot. Note that this operation does not require cop
 File data. The only "file" that is modified is the directory containing the Bag. On some file systems
 this may still require write-privileges on the bag-base-dir.
 
-### Extra
-* `STREAM` - copy the content bytes of one or more Items.
-* `ERASE` - erase the contents of a particular Bag **payload** File, and update the corresponding
-   entries in any affected payload manifests accordingly. 
+### Extension
+Some use cases may require bag data to be deleted, for example for legal reasons. For those special cases, an
+extra operation is defined:
 
-The `ERASE` operation is the one exception to the rule that Bags are immutable. It should only be used in cases
-where there is a legal obligation to destroy the data. Otherwise you should implement a revision history using
-a bag sequence or use bag deactivation.
+* `ERASE` (optional) - erase the contents of a particular Bag **payload** File, and update the corresponding
+  entries in any affected payload manifests accordingly.
 
 [easy-bag-index]: https://github.com/DANS-KNAW/easy-bag-index
 [Migration]: #migrations
