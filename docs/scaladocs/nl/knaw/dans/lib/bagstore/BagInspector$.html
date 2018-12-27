@@ -247,6 +247,12 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="package$$NonVirtuallyValidBagException.html" title=""></a>
+                        <a href="package$$NonVirtuallyValidBagException.html" title="">
+                          NonVirtuallyValidBagException
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="class" href="RegularFileId.html" title=""></a>
                         <a href="RegularFileId.html" title="">
                           RegularFileId
@@ -288,7 +294,7 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">BagInspector</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">BagInspector</span><span class="result"> extends <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
 
@@ -297,7 +303,7 @@
           <span class="toggle">
             Linear Supertypes
           </span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span>, <span class="extype" name="com.typesafe.scalalogging.LazyLogging">LazyLogging</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -323,7 +329,7 @@
                   <span class="filtertype">Inherited<br />
                   </span>
                   <ol id="linearization">
-                    <li class="in" name="nl.knaw.dans.lib.bagstore.BagInspector"><span>BagInspector</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                    <li class="in" name="nl.knaw.dans.lib.bagstore.BagInspector"><span>BagInspector</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging"><span>DebugEnhancedLogging</span></li><li class="in" name="com.typesafe.scalalogging.LazyLogging"><span>LazyLogging</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                   </ol>
                 </div><div class="ancestors">
               <span class="filtertype"></span>
@@ -436,6 +442,22 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.logging.DebugEnhancedLogging#debug" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="debug(msg:String)(implicitenclosing:sourcecode.Name):Unit"></a><a id="debug(String)(Name):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagInspector$.html#debug(msg:String)(implicitenclosing:sourcecode.Name):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">debug</span><span class="params">(<span name="msg">msg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="enclosing">enclosing: <span class="extype" name="sourcecode.Name">Name</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>DebugEnhancedLogging</dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a><a id="eq(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -538,6 +560,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="com.typesafe.scalalogging.LazyLogging#logger" visbl="prt" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="logger:com.typesafe.scalalogging.Logger"></a><a id="logger:Logger"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagInspector$.html#logger:com.typesafe.scalalogging.Logger" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">lazy val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">logger</span><span class="result">: <span class="extype" name="com.typesafe.scalalogging.Logger">Logger</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>LazyLogging</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">
@@ -618,6 +656,22 @@
       </span>
       
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.logging.DebugEnhancedLogging#trace" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="trace[V](value:sourcecode.Text[V])(implicitenclosing:sourcecode.Name):Unit"></a><a id="trace[V](Text[V])(Name):Unit"></a>
+      <span class="permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagInspector$.html#trace[V](value:sourcecode.Text[V])(implicitenclosing:sourcecode.Name):Unit" title="Permalink">
+        <i class="material-icons"></i>
+      </a>
+    </span>
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">trace</span><span class="tparams">[<span name="V">V</span>]</span><span class="params">(<span name="value">value: <span class="extype" name="sourcecode.Text">Text</span>[<span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging.trace.V">V</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="enclosing">enclosing: <span class="extype" name="sourcecode.Name">Name</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>DebugEnhancedLogging</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <span class="permalink">
@@ -698,6 +752,10 @@
               <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
             </div><div class="parent" name="java.io.Serializable">
               <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">
+              <h3>Inherited from <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span></h3>
+            </div><div class="parent" name="com.typesafe.scalalogging.LazyLogging">
+              <h3>Inherited from <span class="extype" name="com.typesafe.scalalogging.LazyLogging">LazyLogging</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">

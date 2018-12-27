@@ -31,7 +31,7 @@ package object bagstore {
   case class CorruptBagStoreException(details: String) extends Exception(s"Corrupt bag store: $details")
   case class NoSuchItemException(details: String) extends Exception(s"No such item in bag store: $details")
   case class BagReaderException(bagFile: File, cause: Throwable) extends Exception(s"Could not read bag at: $bagFile: ${ cause.getMessage }", cause)
-  case class NonVirutallyValidBagException(details: String) extends Exception(s"Bag is not virtually-valid: $details")
+  case class NonVirtuallyValidBagException(details: String) extends Exception(s"Bag is not virtually-valid: $details")
 
   case class FetchItem(uri: URI, size: Long, path: Path) {
     require(!path.isAbsolute, "path must be relative")

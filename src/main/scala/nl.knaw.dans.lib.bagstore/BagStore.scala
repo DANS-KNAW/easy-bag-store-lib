@@ -143,7 +143,9 @@ case class BagStore(baseDir: File,
       validity <- isVirtuallyValid(bagToMove)
       _ <- validity match {
         case Right(()) => Success(())
-        case Left(problems) => Failure(NonVirutallyValidBagException(problems))
+        case Left(problems) =>
+          if(!move) bagToMove.parent.delete(swallowIOExceptions = true)
+          Failure(NonVirtuallyValidBagException(problems))
       }
       uuid <- getUuid
       container <- createContainer(uuid)

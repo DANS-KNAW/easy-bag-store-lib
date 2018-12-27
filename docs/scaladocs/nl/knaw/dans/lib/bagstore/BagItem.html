@@ -247,6 +247,12 @@
                         </a>
                       </li><li class="current-entities indented5">
                         <span class="separator"></span>
+                        <a class="class" href="package$$NonVirtuallyValidBagException.html" title=""></a>
+                        <a href="package$$NonVirtuallyValidBagException.html" title="">
+                          NonVirtuallyValidBagException
+                        </a>
+                      </li><li class="current-entities indented5">
+                        <span class="separator"></span>
                         <a class="class" href="RegularFileId.html" title=""></a>
                         <a href="RegularFileId.html" title="">
                           RegularFileId
@@ -640,11 +646,10 @@ the failure and the result must be regarded as incomplete.</p></div><dl class="p
         <span class="name">isVirtuallyValid</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Either">Either</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Unit">Unit</span>]]</span>
       </span>
       
-      <p class="shortcomment cmt">A Bag is virtually-valid if:</p><div class="fullcomment"><div class="comment cmt"><p>A Bag is virtually-valid if:</p><p>- it is [valid], or
-- it is incomplete, but contains a [<code>fetch.txt</code>] file and can be made valid by fetching the files
-  listed in it and removing <code>fetch.txt</code> and its corresponding checksums from the Bag. If
-  local-file-uris are used, they must reference RegularFiles in the same BagStore.</p><p>BagItems must *always* be virtually-valid. Otherwise the BagStore is corrupt.
-</p></div></div>
+      <p class="shortcomment cmt">A Bag is virtually-valid if:</p><div class="fullcomment"><div class="comment cmt"><p>A Bag is virtually-valid if:</p><ul><li>it is valid, or</li><li>it is incomplete, but contains a fetch.txt file and can be made valid by fetching the files
+   listed in it and removing fetch.txt and its corresponding checksums from the Bag. If
+   local-file-uris are used, they must reference RegularFiles in the same BagStore.</li></ul><p>BagItems must <i>always</i> be virtually-valid. Otherwise the BagStore is corrupt.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>Right(())</code> if the BagItem is virtually valid, <code>Left(msg)</code> otherwise, in which <code>msg</code> specifies the reason.</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a><a id="ne(AnyRef):Boolean"></a>
       <span class="permalink">

@@ -56,14 +56,14 @@ case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
   /**
    * A Bag is virtually-valid if:
    *
-   * - it is [valid], or
-   * - it is incomplete, but contains a [`fetch.txt`] file and can be made valid by fetching the files
-   *   listed in it and removing `fetch.txt` and its corresponding checksums from the Bag. If
-   *   local-file-uris are used, they must reference RegularFiles in the same BagStore.
+   *  - it is valid, or
+   *  - it is incomplete, but contains a fetch.txt file and can be made valid by fetching the files
+   *    listed in it and removing fetch.txt and its corresponding checksums from the Bag. If
+   *    local-file-uris are used, they must reference RegularFiles in the same BagStore.
    *
-   * BagItems must *always* be virtually-valid. Otherwise the BagStore is corrupt.
+   * BagItems must ''always'' be virtually-valid. Otherwise the BagStore is corrupt.
    *
-   * @return
+   * @return `Right(())` if the BagItem is virtually valid, `Left(msg)` otherwise, in which `msg` specifies the reason.
    */
   def isVirtuallyValid: Try[Either[String, Unit]] = {
     for {
