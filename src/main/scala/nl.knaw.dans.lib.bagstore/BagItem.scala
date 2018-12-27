@@ -81,4 +81,5 @@ case class BagItem (bagStore: BagStore, uuid: UUID) extends Item {
   }
 
   def getStream(packaging: Packaging.Packaging): Try[InputStream] = ???
+
 }

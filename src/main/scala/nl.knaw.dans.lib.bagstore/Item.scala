@@ -60,13 +60,4 @@ trait Item {
    * @return
    */
   def getLocation: Try[File]
-
-  /**
-   * Opens and returns a `java.io.InputStream` to read the item data.
-   *
-   * @param packaging how to package the data
-   *
-   */
-  def getStream(packaging: Packaging = NONE): Try[InputStream]
-
 }

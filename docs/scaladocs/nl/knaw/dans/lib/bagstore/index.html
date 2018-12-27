@@ -421,26 +421,26 @@
       
       
     </li><li name="nl.knaw.dans.lib.bagstore.BagStore" visbl="pub" class="indented0 " data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="BagStoreextendsDebugEnhancedLoggingwithProductwithSerializable"></a><a id="BagStore:BagStore"></a>
+      <a id="BagStoreextendsDebugEnhancedLogging"></a><a id="BagStore:BagStore"></a>
       <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/index.html#BagStoreextendsDebugEnhancedLoggingwithProductwithSerializable" title="Permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/index.html#BagStoreextendsDebugEnhancedLogging" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">case class</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
         <a title="Represents an existing bag store." href="BagStore.html">
               <span class="name">BagStore</span>
-            </a><span class="params">(<span name="baseDir">baseDir: <span class="extype" name="better.files.File">File</span></span>, <span name="stagingDir">stagingDir: <span class="extype" name="better.files.File">File</span></span>, <span name="slashPattern">slashPattern: <a href="package$$SlashPattern.html" class="extype" name="nl.knaw.dans.lib.bagstore.SlashPattern">SlashPattern</a> = <span class="symbol">SlashPattern(2, 30)</span></span>, <span name="bagDirPermissions">bagDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="defval" name="PosixFilePermissions.fromString(&quot;r-xr-xr-x&quot;).asScala.toSet">...</span></span>, <span name="bagFilePermissions">bagFilePermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="defval" name="PosixFilePermissions.fromString(&quot;r--r--r--&quot;).asScala.toSet">...</span></span>, <span name="containerDirPermissions">containerDirPermissions: <span class="extype" name="scala.Predef.Set">Set</span>[<span class="extype" name="java.nio.file.attribute.PosixFilePermission">PosixFilePermission</span>] = <span class="defval" name="PosixFilePermissions.fromString(&quot;rwxr-xr-x&quot;).asScala.toSet">...</span></span>, <span name="localFileBaseUri">localFileBaseUri: <span class="extype" name="java.net.URI">URI</span> = <span class="symbol">new URI(&quot;http://localhost/&quot;)</span></span>)</span><span class="result"> extends <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+            </a><span class="result"> extends <span class="extype" name="nl.knaw.dans.lib.logging.DebugEnhancedLogging">DebugEnhancedLogging</span></span>
       </span>
       
       <p class="shortcomment cmt">Represents an existing bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Represents an existing bag store. The bag store may be empty. If it already has content the onus is on the caller
 to ensure that the other parameters are consistent with it.</p><p>The staging directory <code>stagingDir</code> must be on the same partition as the bag store, so that an atomic
 move operation is possible.
-</p></div><dl class="paramcmts block"><dt class="param">baseDir</dt><dd class="cmt"><p>the base directory of the bag store</p></dd><dt class="param">stagingDir</dt><dd class="cmt"><p>the directory to use for staging bags</p></dd><dt class="param">slashPattern</dt><dd class="cmt"><p>the slash pattern to use when creating containing directories for the bag</p></dd><dt class="param">bagDirPermissions</dt><dd class="cmt"><p>the permissions to set on directories added to the bag store</p></dd><dt class="param">bagFilePermissions</dt><dd class="cmt"><p>the permissions to set on regular files added to the bag store</p></dd><dt class="param">containerDirPermissions</dt><dd class="cmt"><p>the permissions to set on container directories and their parents inside the bag store</p></dd></dl></div>
+</p></div></div>
     </li><li name="nl.knaw.dans.lib.bagstore.CorruptBagStoreException" visbl="pub" class="indented0 " data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CorruptBagStoreExceptionextendsExceptionwithProductwithSerializable"></a><a id="CorruptBagStoreException:CorruptBagStoreException"></a>
       <span class="permalink">
@@ -753,7 +753,7 @@ not contain symbolic links.
       <span class="symbol">
         <a title="" href="BagStore$.html">
               <span class="name">BagStore</span>
-            </a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+            </a>
       </span>
       
       

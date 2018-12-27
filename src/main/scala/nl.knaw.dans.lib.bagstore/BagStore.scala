@@ -21,16 +21,13 @@ import java.nio.file.attribute.{ PosixFilePermission, PosixFilePermissions }
 import java.util.UUID
 
 import better.files.File
-import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 import nl.knaw.dans.lib.error._
+import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 
 import scala.collection.JavaConverters._
 import scala.language.postfixOps
 import scala.util.{ Failure, Success, Try }
 
-object BagStore {
-  private val fetchTxtFilename = "fetch.txt"
-}
 
 /**
  * Represents an existing bag store. The bag store may be empty. If it already has content the onus is on the caller
@@ -47,13 +44,12 @@ object BagStore {
  * @param bagFilePermissions      the permissions to set on regular files added to the bag store
  *
  */
-case class BagStore(baseDir: File,
-                    stagingDir: File,
-                    slashPattern: SlashPattern = SlashPattern(2, 30),
-                    bagDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r-xr-xr-x").asScala.toSet,
-                    bagFilePermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r--r--r--").asScala.toSet,
-                    containerDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("rwxr-xr-x").asScala.toSet,
-                    localFileBaseUri: URI = new URI("http://localhost/")) extends DebugEnhancedLogging {
+class BagStore(private[bagstore] val baseDir: File, stagingDir: File,
+               private[bagstore] val slashPattern: SlashPattern = SlashPattern(2, 30),
+               private[bagstore] val bagDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r-xr-xr-x").asScala.toSet,
+               private[bagstore] val bagFilePermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r--r--r--").asScala.toSet,
+               private[bagstore] val containerDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("rwxr-xr-x").asScala.toSet,
+               private[bagstore] val localFileBaseUri: URI = new URI("http://localhost/")) extends DebugEnhancedLogging {
   require(baseDir isDirectory, "baseDir must be an existing directory")
   require(baseDir isReadable, "baseDir must be readable")
   require(baseDir isWriteable, "baseDir must be writeable")
@@ -144,7 +140,7 @@ case class BagStore(baseDir: File,
       _ <- validity match {
         case Right(()) => Success(())
         case Left(problems) =>
-          if(!move) bagToMove.parent.delete(swallowIOExceptions = true)
+          if (!move) bagToMove.parent.delete(swallowIOExceptions = true)
           Failure(NonVirtuallyValidBagException(problems))
       }
       uuid <- getUuid
@@ -239,7 +235,7 @@ case class BagStore(baseDir: File,
     } yield RegularFileItem(BagItem(this, regularFileId.uuid), regularFileId.path)
   }
 
-  def get(localFileUri: URI): Try [RegularFileItem] = {
+  def get(localFileUri: URI): Try[RegularFileItem] = {
     def reportDifferentComponent(comp: String) = s"localFileUri must have the same $comp as local-file-base-uri: $localFileBaseUri"
 
     Try {
@@ -294,11 +290,11 @@ case class BagStore(baseDir: File,
   /**
    * Resolves the relative `path` to a regular file item to the location where its file data is actually stored.
    *
-   * @param bag the bag in which the regular file is located, possibly only virtually
+   * @param bag  the bag in which the regular file is located, possibly only virtually
    * @param path the bag-relative path of the regular file
    * @return the real location
    */
-  def getFileDataLocation(bag: File, path: Path): Try[File] = {
+  private[bagstore] def getFileDataLocation(bag: File, path: Path): Try[File] = {
     trace(bag, path)
     val location = bag / path.toString
     if (location isRegularFile) Try { location }
@@ -307,13 +303,13 @@ case class BagStore(baseDir: File,
       inspector <- createBagInspector(bag)
       fetchItems <- inspector.getFetchItems
       _ = debug(s"fetchItems = $fetchItems")
-      fetchItem <-  Try { fetchItems.getOrElse(path, throw NoSuchItemException(s"$path is neither and existing file nor a fetch reference")) }
+      fetchItem <- Try { fetchItems.getOrElse(path, throw NoSuchItemException(s"$path is neither and existing file nor a fetch reference")) }
       fileItem <- get(fetchItem.uri)
       fileDataLocation <- fileItem.getFileDataLocation
     } yield fileDataLocation
   }
 
-  private  def createBagInspector(bag: File) = Try {
+  private def createBagInspector(bag: File) = Try {
     BagInspector(bag)
   }.recoverWith {
     case t: Throwable => Failure(BagReaderException(bag, t))
@@ -338,7 +334,8 @@ case class BagStore(baseDir: File,
         case (real, projected) =>
           debug(s"Link from $projected to $real")
           projected.parent createDirectories()
-          projected symbolicLinkTo real }
+          projected symbolicLinkTo real
+      }
     }
 
     def verifyValid(i: BagInspector, b: File) = for {
@@ -410,16 +407,22 @@ case class BagStore(baseDir: File,
     // TODO: Implement complete
     ???
   }
-
-  /**
-   * Verifies that this bag store is consistent.
-   *
-   *
-   * @return
-   */
-  def verify: Try[Unit] = {
-    // TODO: Implement verify
-    ???
-  }
 }
 
+object BagStore {
+  val fetchTxtFilename: String = "fetch.txt"
+  val defaultSlashPattern: SlashPattern = SlashPattern(2, 30)
+  val defaultBagDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r-xr-xr-x").asScala.toSet
+  val defaultBagFilePermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("r--r--r--").asScala.toSet
+  val defaultContainerDirPermissions: Set[PosixFilePermission] = PosixFilePermissions.fromString("rwxr-xr-x").asScala.toSet
+  val defaultLocalFileBaseUri: URI = new URI("http://localhost/")
+
+  def apply(baseDir: File, stagingDir: File,
+            slashPattern: SlashPattern = defaultSlashPattern,
+            bagDirPermissions: Set[PosixFilePermission] = defaultBagDirPermissions,
+            bagFilePermissions: Set[PosixFilePermission] = defaultBagFilePermissions,
+            containerDirPermissions: Set[PosixFilePermission] = defaultContainerDirPermissions,
+            localFileBaseUri: URI = defaultLocalFileBaseUri): BagStore = {
+    new BagStore(baseDir, stagingDir, slashPattern, bagDirPermissions, bagFilePermissions, containerDirPermissions, localFileBaseUri)
+  }
+}
