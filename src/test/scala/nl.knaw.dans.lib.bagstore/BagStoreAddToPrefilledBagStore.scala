@@ -17,6 +17,8 @@ package nl.knaw.dans.lib.bagstore
 
 import java.nio.file.attribute.PosixFilePermissions
 
+import gov.loc.repository.bagit.exceptions.MaliciousPathException
+
 import scala.collection.JavaConverters._
 import scala.util.{ Failure, Success }
 
@@ -55,6 +57,19 @@ class BagStoreAddToPrefilledBagStore extends ReadWriteTestSupportFixture {
       case Failure(e) =>
         e shouldBe a[IllegalArgumentException]
         e.getMessage should include("Conflicting fetch items")
+    }
+  }
+
+  it should "reject a bag containing a fetch item that includes '..' in the target path" in {
+    /*
+     * This is possibly a malicious bag that tries to overwrite system files, e.g. http://badsite.com/hackedpasswords.txt - ../../../../passwd
+     */
+    val result = bagStore.add(testResources / "bags" / "possibly-malicious")
+    result shouldBe a[Failure[_]]
+    inside(result) {
+      case Failure(e) =>
+        // TODO: wrap this java-bagit exception?
+        e shouldBe a[MaliciousPathException]
     }
   }
 

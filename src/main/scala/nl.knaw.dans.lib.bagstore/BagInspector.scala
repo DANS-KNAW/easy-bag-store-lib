@@ -112,7 +112,6 @@ case class BagInspector(bagFile: File) {
       })
   }
 
-  // TODO: check that no malicious path can be constructed (maybe bagit lib already checks that)
   def getFetchItems: Try[Map[Path, FetchItem]] = {
     for {
       bag <- maybeBag
