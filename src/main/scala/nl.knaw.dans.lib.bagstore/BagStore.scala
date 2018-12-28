@@ -122,22 +122,72 @@ trait BagStore {
   def get(itemId: ItemId): Try[Item]
 
   /**
+   * Returns a [[FileItem]].
    *
-   * @param fileId
-   * @return
+   * @param fileId the file-id of the file to get
+   * @return the file, if found
    */
   def get(fileId: FileId): Try[FileItem]
 
+  /**
+   * Returns a [[BagItem]].
+   *
+   * @param bagId the bag-id of the bag to get
+   * @return the bag, if found
+   */
   def get(bagId: BagId): Try[BagItem]
 
+  /**
+   * Returns a [[DirectoryItem]].
+   *
+   * @param directoryId the file-id of the directory to get
+   * @return the directory, if found
+   */
   def get(directoryId: DirectoryId): Try[DirectoryItem]
 
+  /**
+   * Returns a [[RegularFileItem]]
+   *
+   * @param regularFileId the file-id of the regular file to get
+   * @return the regular file, if found
+   */
   def get(regularFileId: RegularFileId): Try[RegularFileItem]
 
+  /**
+   * Returns a [[RegularFileItem]]
+   *
+   * @param localFileUri the local-file-uri of the regular file to get
+   * @return the regular file, if found
+   */
   def get(localFileUri: URI): Try[RegularFileItem]
 
+  /**
+   * Returns a `Stream` that enumerates all the bags in the bag store. The order in which the bags appear in the stream undetermined.
+   * However, all bags are guaranteed to appear. The ony exceptions to this are that an I/O error occurs or the bag store turns out to be
+   * corrupt. In thoses cases the stream returns a `Failure` when the error occurs and will not return any more items after that.
+   *
+   * By default only active bags are included, but this behavior can be overridden using the input parameters.
+   *
+   * @param includeActive   whether to include active bags
+   * @param includeInactive whether to include inactive bags
+   * @return a stream of bags
+   */
   def enum(includeActive: Boolean = true, includeInactive: Boolean = false): Try[Stream[Try[BagItem]]]
 
+  /**
+   * Verifies that that bag store is uncorrupted. The checks include, in the following order:
+   *
+   *  1. The slashing pattern is used consistently.
+   *  2. There are no empty container directories.
+   *  3. All the bags are virtually-valid.
+   *
+   * Obviously, this may take a long time to complete, depending on the size of the store and the performance of
+   * the storage it is located on. By default the whole store will be checked, but it is possible to cut the operation
+   * short on the first violation that is encountered.
+   *
+   * @param failOnFirstViolation whether to fail on the first violation encountered, or keep checking the rest of the bag store
+   * @return success or failure
+   */
   def verify(failOnFirstViolation: Boolean = true): Try[Unit]
 
   /**
@@ -145,7 +195,7 @@ trait BagStore {
    * stored in the bag store currently.
    *
    * @param bag the bag to validate
-   * @return
+   * @return `Right(())` if virtually-valid, or `Left(msg)` in which `msg` details the reasons why the bag is not virtually-valid
    */
   def isVirtuallyValid(bag: File): Try[Either[String, Unit]]
 
@@ -154,18 +204,21 @@ trait BagStore {
    * the file in that reference bag. The result is a smaller bag, which is still virtually valid relative to this
    * bag store.
    *
-   * @param bag
-   * @param refBagId
+   * @param bag      the bag directory to process
+   * @param refBagId the bag-ids in which to search
    */
   def prune(bag: File, refBagId: BagId*): Try[Unit]
 
   /**
+   * Downloads the fetch items in `fetch.txt` and removes `fetch.txt` and any entries for it in tagmanifests, so as to make `bag`
+   * valid. Optionally, resolution can be limited to only local-file-uris or only remote URIs. In that case the bag may still not
+   * be valid after the operation. However, it will be virtually-valid if it was so before.
    *
-   *
-   * @param bag
+   * @param bag                  the bag to process
+   * @param resolveLocalFileUris whether to resolve local-file-uris
+   * @param resolveRemoteUris    whether to resolve remote URIs
    */
-  def complete(bag: File): Try[Unit]
-
+  def complete(bag: File, resolveLocalFileUris: Boolean = true, resolveRemoteUris: Boolean = true): Try[Unit]
 }
 
 object BagStore {
@@ -506,7 +559,8 @@ private[bagstore] class BagStoreImpl(val baseDir: File,
     ???
   }
 
-  override def complete(bag: File): Try[Unit] = {
+  override def complete(bag: File, resolveLocalFileUris: Boolean, resolveRemoteUris: Boolean): Try[Unit] = {
+    trace(bag, resolveLocalFileUris, resolveRemoteUris)
     // TODO: Implement complete
     ???
   }

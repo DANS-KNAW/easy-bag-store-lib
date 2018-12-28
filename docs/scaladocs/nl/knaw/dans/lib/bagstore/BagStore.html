@@ -301,7 +301,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Interface to a bag store. Use <a href="BagStore$.html#apply(baseDir:better.files.File,stagingDir:better.files.File,slashPattern:nl.knaw.dans.lib.bagstore.SlashPattern,bagDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],bagFilePermissions:Set[java.nio.file.attribute.PosixFilePermission],containerDirPermissions:Set[java.nio.file.attribute.PosixFilePermission],localFileBaseUri:java.net.URI):nl.knaw.dans.lib.bagstore.BagStoreImpl" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#apply">the constructor on the companion object</a> to create an instance to work with.</p><h3> Bag store operations </h3><p>The methods of this trait implement some of the operations as defined on the Definitions page of the bag store project:</p><ul><li><code>ADD</code>: <a href="#add(bag:better.files.File,optUuid:Option[java.util.UUID],move:Boolean):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#add">BagStore.add</a></li><li><code>GET</code>: the various overloads of get</li><li><code>ENUM</code> (for bags): <a href="#enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#enum">BagStore.enum</a></li></ul><p>The other operations are defined in <a href="Item.html" class="extype" name="nl.knaw.dans.lib.bagstore.Item">Item</a> and its subclasses. To retrieve an item object, use one of overloads of <code>get</code> passing it the
 appropriate item-id. Use the item object to access the properties of corresponding bag or file in the bag store, or to perform one of the
-operations on it:</p><ul><li><code>ENUM</code> (for files in a bag): <a href="BagItem.html#enum(includeRegularFiles:Boolean,includeDirectories:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]]]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#enum">BagItem.enum</a></li><li><code>DEACTIVATE</code>: <a href="BagItem.html#deactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#deactivate">BagItem.deactivate</a></li><li><code>REACTIVATE</code>: <a href="BagItem.html#reactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#reactivate">BagItem.reactivate</a></li><li><code>ERASE</code>: <a href="RegularFileItem.html#erase(authority:String,reason:String):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.RegularFileItem#erase">RegularFileItem.erase</a></li></ul><h3> Utility functions </h3><p>Additionally, some utility function are provided:</p><ul><li><a href="#verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#verify">verify</a> - to verify that a bag store is consistent</li><li><a href="#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#prune">prune</a> - to minimize a bag before adding it to this bag store</li><li><a href="#complete(bag:better.files.File):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#complete">complete</a> - to complete a minimized bag</li></ul><h3> Example code </h3><pre><span class="kw">val</span> bagStore = BagStore(File(<span class="lit">"/data/bagstore"</span>), File(<span class="lit">"/data/staging"</span>))
+operations on it:</p><ul><li><code>ENUM</code> (for files in a bag): <a href="BagItem.html#enum(includeRegularFiles:Boolean,includeDirectories:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]]]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#enum">BagItem.enum</a></li><li><code>DEACTIVATE</code>: <a href="BagItem.html#deactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#deactivate">BagItem.deactivate</a></li><li><code>REACTIVATE</code>: <a href="BagItem.html#reactivate():scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagItem#reactivate">BagItem.reactivate</a></li><li><code>ERASE</code>: <a href="RegularFileItem.html#erase(authority:String,reason:String):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.RegularFileItem#erase">RegularFileItem.erase</a></li></ul><h3> Utility functions </h3><p>Additionally, some utility function are provided:</p><ul><li><a href="#verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#verify">verify</a> - to verify that a bag store is consistent</li><li><a href="#prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#prune">prune</a> - to minimize a bag before adding it to this bag store</li><li><a href="#complete(bag:better.files.File,resolveLocalFileUris:Boolean,resolveRemoteUris:Boolean):scala.util.Try[Unit]" class="extmbr" name="nl.knaw.dans.lib.bagstore.BagStore#complete">complete</a> - to complete a minimized bag</li></ul><h3> Example code </h3><pre><span class="kw">val</span> bagStore = BagStore(File(<span class="lit">"/data/bagstore"</span>), File(<span class="lit">"/data/staging"</span>))
 <span class="kw">val</span> bagToAdd = File(<span class="lit">"/home/jdoe/bag1"</span>)
 
 <span class="kw">for</span> {
@@ -395,10 +395,10 @@ step and have <code>bag</code> be moved into the bag store from its current loca
 location must be on the same partition as the bag store itself, so that an atomic move operation is
 possible.</p><p>A hidden file cannot be added to the bag store, as it would result in a bag that starts off inactive.
 </p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to add</p></dd><dt class="param">optUuid</dt><dd class="cmt"><p>the UUID to use as bag-id</p></dd><dt class="param">move</dt><dd class="cmt"><p>move (instead of copy) the bag into the bag store*</p></dd><dt>returns</dt><dd class="cmt"><p>the added <a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a></p></dd></dl></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#complete" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="complete(bag:better.files.File):scala.util.Try[Unit]"></a><a id="complete(File):Try[Unit]"></a>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#complete" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="complete(bag:better.files.File,resolveLocalFileUris:Boolean,resolveRemoteUris:Boolean):scala.util.Try[Unit]"></a><a id="complete(File,Boolean,Boolean):Try[Unit]"></a>
       <span class="permalink">
-      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#complete(bag:better.files.File):scala.util.Try[Unit]" title="Permalink">
+      <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#complete(bag:better.files.File,resolveLocalFileUris:Boolean,resolveRemoteUris:Boolean):scala.util.Try[Unit]" title="Permalink">
         <i class="material-icons"></i>
       </a>
     </span>
@@ -407,11 +407,15 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">complete</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
+        <span class="name">complete</span><span class="params">(<span name="bag">bag: <span class="extype" name="better.files.File">File</span></span>, <span name="resolveLocalFileUris">resolveLocalFileUris: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="resolveRemoteUris">resolveRemoteUris: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
       </span>
       
-      <p class="shortcomment cmt"></p>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#enum" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Downloads the fetch items in <code>fetch.txt</code> and removes <code>fetch.txt</code> and any entries for it in tagmanifests, so as to make <code>bag</code>
+valid.</p><div class="fullcomment"><div class="comment cmt"><p>Downloads the fetch items in <code>fetch.txt</code> and removes <code>fetch.txt</code> and any entries for it in tagmanifests, so as to make <code>bag</code>
+valid. Optionally, resolution can be limited to only local-file-uris or only remote URIs. In that case the bag may still not
+be valid after the operation. However, it will be virtually-valid if it was so before.
+</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to process</p></dd><dt class="param">resolveLocalFileUris</dt><dd class="cmt"><p>whether to resolve local-file-uris</p></dd><dt class="param">resolveRemoteUris</dt><dd class="cmt"><p>whether to resolve remote URIs</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#enum" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]"></a><a id="enum(Boolean,Boolean):Try[Stream[Try[BagItem]]]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#enum(includeActive:Boolean,includeInactive:Boolean):scala.util.Try[Stream[scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]]]" title="Permalink">
@@ -426,8 +430,11 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
         <span class="name">enum</span><span class="params">(<span name="includeActive">includeActive: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="includeInactive">includeInactive: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Stream">Stream</span>[<span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]]]</span>
       </span>
       
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Returns a <code>Stream</code> that enumerates all the bags in the bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <code>Stream</code> that enumerates all the bags in the bag store. The order in which the bags appear in the stream undetermined.
+However, all bags are guaranteed to appear. The ony exceptions to this are that an I/O error occurs or the bag store turns out to be
+corrupt. In thoses cases the stream returns a <code>Failure</code> when the error occurs and will not return any more items after that.</p><p>By default only active bags are included, but this behavior can be overridden using the input parameters.
+</p></div><dl class="paramcmts block"><dt class="param">includeActive</dt><dd class="cmt"><p>whether to include active bags</p></dd><dt class="param">includeInactive</dt><dd class="cmt"><p>whether to include inactive bags</p></dd><dt>returns</dt><dd class="cmt"><p>a stream of bags</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="get(localFileUri:java.net.URI):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]"></a><a id="get(URI):Try[RegularFileItem]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(localFileUri:java.net.URI):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]" title="Permalink">
@@ -442,8 +449,10 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
         <span class="name">get</span><span class="params">(<span name="localFileUri">localFileUri: <span class="extype" name="java.net.URI">URI</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>]</span>
       </span>
       
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Returns a <a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>
+</p></div><dl class="paramcmts block"><dt class="param">localFileUri</dt><dd class="cmt"><p>the local-file-uri of the regular file to get</p></dd><dt>returns</dt><dd class="cmt"><p>the regular file, if found</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="get(regularFileId:nl.knaw.dans.lib.bagstore.RegularFileId):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]"></a><a id="get(RegularFileId):Try[RegularFileItem]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(regularFileId:nl.knaw.dans.lib.bagstore.RegularFileId):scala.util.Try[nl.knaw.dans.lib.bagstore.RegularFileItem]" title="Permalink">
@@ -458,8 +467,10 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
         <span class="name">get</span><span class="params">(<span name="regularFileId">regularFileId: <a href="RegularFileId.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileId">RegularFileId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>]</span>
       </span>
       
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Returns a <a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a href="RegularFileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.RegularFileItem">RegularFileItem</a>
+</p></div><dl class="paramcmts block"><dt class="param">regularFileId</dt><dd class="cmt"><p>the file-id of the regular file to get</p></dd><dt>returns</dt><dd class="cmt"><p>the regular file, if found</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="get(directoryId:nl.knaw.dans.lib.bagstore.DirectoryId):scala.util.Try[nl.knaw.dans.lib.bagstore.DirectoryItem]"></a><a id="get(DirectoryId):Try[DirectoryItem]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(directoryId:nl.knaw.dans.lib.bagstore.DirectoryId):scala.util.Try[nl.knaw.dans.lib.bagstore.DirectoryItem]" title="Permalink">
@@ -474,8 +485,9 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
         <span class="name">get</span><span class="params">(<span name="directoryId">directoryId: <a href="DirectoryId.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryId">DirectoryId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="DirectoryItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryItem">DirectoryItem</a>]</span>
       </span>
       
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Returns a <a href="DirectoryItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryItem">DirectoryItem</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a href="DirectoryItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.DirectoryItem">DirectoryItem</a>.
+</p></div><dl class="paramcmts block"><dt class="param">directoryId</dt><dd class="cmt"><p>the file-id of the directory to get</p></dd><dt>returns</dt><dd class="cmt"><p>the directory, if found</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="get(bagId:nl.knaw.dans.lib.bagstore.BagId):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]"></a><a id="get(BagId):Try[BagItem]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(bagId:nl.knaw.dans.lib.bagstore.BagId):scala.util.Try[nl.knaw.dans.lib.bagstore.BagItem]" title="Permalink">
@@ -490,8 +502,9 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
         <span class="name">get</span><span class="params">(<span name="bagId">bagId: <a href="BagId.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagId">BagId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>]</span>
       </span>
       
-      
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Returns a <a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a href="BagItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.BagItem">BagItem</a>.
+</p></div><dl class="paramcmts block"><dt class="param">bagId</dt><dd class="cmt"><p>the bag-id of the bag to get</p></dd><dt>returns</dt><dd class="cmt"><p>the bag, if found</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="get(fileId:nl.knaw.dans.lib.bagstore.FileId):scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]"></a><a id="get(FileId):Try[FileItem]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#get(fileId:nl.knaw.dans.lib.bagstore.FileId):scala.util.Try[nl.knaw.dans.lib.bagstore.FileItem]" title="Permalink">
@@ -506,7 +519,8 @@ possible.</p><p>A hidden file cannot be added to the bag store, as it would resu
         <span class="name">get</span><span class="params">(<span name="fileId">fileId: <a href="FileId.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileId">FileId</a></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<a href="FileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileItem">FileItem</a>]</span>
       </span>
       
-      <p class="shortcomment cmt"></p>
+      <p class="shortcomment cmt">Returns a <a href="FileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileItem">FileItem</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <a href="FileItem.html" class="extype" name="nl.knaw.dans.lib.bagstore.FileItem">FileItem</a>.
+</p></div><dl class="paramcmts block"><dt class="param">fileId</dt><dd class="cmt"><p>the file-id of the file to get</p></dd><dt>returns</dt><dd class="cmt"><p>the file, if found</p></dd></dl></div>
     </li><li name="nl.knaw.dans.lib.bagstore.BagStore#get" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="get(itemId:nl.knaw.dans.lib.bagstore.ItemId):scala.util.Try[nl.knaw.dans.lib.bagstore.Item]"></a><a id="get(ItemId):Try[Item]"></a>
       <span class="permalink">
@@ -542,7 +556,7 @@ type of item you expect, you may use one the overloaded methods.
       
       <p class="shortcomment cmt">Determines whether <code>bag</code> is virtually-valid with respect to this bag store.</p><div class="fullcomment"><div class="comment cmt"><p>Determines whether <code>bag</code> is virtually-valid with respect to this bag store. The bag may or may not be
 stored in the bag store currently.
-</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to validate</p></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag to validate</p></dd><dt>returns</dt><dd class="cmt"><p><code>Right(())</code> if virtually-valid, or <code>Left(msg)</code> in which <code>msg</code> details the reasons why the bag is not virtually-valid</p></dd></dl></div>
     </li><li name="nl.knaw.dans.lib.bagstore.BagStore#prune" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="prune(bag:better.files.File,refBagId:nl.knaw.dans.lib.bagstore.BagId*):scala.util.Try[Unit]"></a><a id="prune(File,BagId*):Try[Unit]"></a>
       <span class="permalink">
@@ -562,8 +576,8 @@ stored in the bag store currently.
 the file in that reference bag.</p><div class="fullcomment"><div class="comment cmt"><p>Removes from <code>bag</code> the payload files which are found in one of the reference bags and adds a fetch reference to
 the file in that reference bag. The result is a smaller bag, which is still virtually valid relative to this
 bag store.
-</p></div></div>
-    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#verify" visbl="pub" class="indented0 " data-isabs="true" fullComment="no" group="Ungrouped">
+</p></div><dl class="paramcmts block"><dt class="param">bag</dt><dd class="cmt"><p>the bag directory to process</p></dd><dt class="param">refBagId</dt><dd class="cmt"><p>the bag-ids in which to search</p></dd></dl></div>
+    </li><li name="nl.knaw.dans.lib.bagstore.BagStore#verify" visbl="pub" class="indented0 " data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]"></a><a id="verify(Boolean):Try[Unit]"></a>
       <span class="permalink">
       <a href="../../../../../nl/knaw/dans/lib/bagstore/BagStore.html#verify(failOnFirstViolation:Boolean):scala.util.Try[Unit]" title="Permalink">
@@ -578,7 +592,12 @@ bag store.
         <span class="name">verify</span><span class="params">(<span name="failOnFirstViolation">failOnFirstViolation: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>)</span><span class="result">: <span class="extype" name="scala.util.Try">Try</span>[<span class="extype" name="scala.Unit">Unit</span>]</span>
       </span>
       
-      
+      <p class="shortcomment cmt">Verifies that that bag store is uncorrupted.</p><div class="fullcomment"><div class="comment cmt"><p>Verifies that that bag store is uncorrupted. The checks include, in the following order:</p><ol class="decimal"><li>The slashing pattern is used consistently.
+ 2. There are no empty container directories.
+ 3. All the bags are virtually-valid.</li></ol><p>Obviously, this may take a long time to complete, depending on the size of the store and the performance of
+the storage it is located on. By default the whole store will be checked, but it is possible to cut the operation
+short on the first violation that is encountered.
+</p></div><dl class="paramcmts block"><dt class="param">failOnFirstViolation</dt><dd class="cmt"><p>whether to fail on the first violation encountered, or keep checking the rest of the bag store</p></dd><dt>returns</dt><dd class="cmt"><p>success or failure</p></dd></dl></div>
     </li></ol>
             </div>
 
