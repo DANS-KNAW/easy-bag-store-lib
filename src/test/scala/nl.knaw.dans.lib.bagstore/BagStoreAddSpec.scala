@@ -54,7 +54,7 @@ class BagStoreAddSpec extends ReadWriteTestSupportFixture {
     }
   }
 
-  it should "not accept an invalid, unserialized bag" in {
+  it should "reject an invalid, unserialized bag" in {
     /*
      * The "add" method must guard the bag store against becoming corrupt.
      */
@@ -87,17 +87,6 @@ class BagStoreAddSpec extends ReadWriteTestSupportFixture {
     bagStore.add(userHome / "small", move = true)
     userHome.toJava should exist
     userHome.list shouldBe empty
-  }
-
-  it should "accept an incomplete, unserialized bag that is virtually-valid" in {
-    /*
-     * A bag that is only virtually valid, but not valid according to the BagIt specs, should still be successfully added to the bag store.
-     */
-    testResources / "bag-stores" / "three-revisions" copyToDirectory testDir
-    val bagStoreThreeRevisions = BagStore(testDir / "three-revisions", stagingDir,
-      bagDirPermissions = PosixFilePermissions.fromString("rwx------").asScala.toSet,
-      bagFilePermissions = PosixFilePermissions.fromString("rwx------").asScala.toSet)
-    bagStoreThreeRevisions.add(testResources / "bags" / "bag-revision-4") shouldBe a[Success[_]]
   }
 
   it should "set bag directory and file permissions as specified in BagStore constructor" in {

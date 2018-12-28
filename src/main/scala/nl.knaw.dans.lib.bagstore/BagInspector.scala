@@ -20,10 +20,11 @@ import java.util.concurrent.{ CountDownLatch, ExecutorService }
 import java.util.{ ArrayList => JArrayList, Set => JSet }
 
 import better.files.File
-import gov.loc.repository.bagit.domain.{ Bag, Manifest => BagitManifest }
+import gov.loc.repository.bagit.domain.{ Bag, Manifest => BagitManifest, FetchItem => BagItFetchItem }
 import gov.loc.repository.bagit.exceptions._
 import gov.loc.repository.bagit.reader.BagReader
 import gov.loc.repository.bagit.verify.{ BagVerifier, CheckManifestHashesTask }
+
 import nl.knaw.dans.lib.bagstore.BagInspector.bagReader
 import nl.knaw.dans.lib.error._
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
@@ -115,6 +116,7 @@ case class BagInspector(bagFile: File) {
   def getFetchItems: Try[Map[Path, FetchItem]] = {
     for {
       bag <- maybeBag
+      _ <- checkForConflictingTargets(bag)
       items <- Try {
         bag.getItemsToFetch.asScala.map {
           fi =>
@@ -123,5 +125,16 @@ case class BagInspector(bagFile: File) {
         }.toMap
       }
     } yield items
+  }
+
+  private def checkForConflictingTargets(bag: Bag): Try[Unit] = Try {
+    val conflicts = bag
+      .getItemsToFetch
+      .asScala
+        .map(fi => bag.getRootDir.relativize(fi.path))
+      .groupBy(identity).mapValues(_.size).filter { case (path, size) => size > 1 }
+    if (conflicts.nonEmpty)  {
+      throw new IllegalArgumentException(s"Conflicting fetch items for paths: ${conflicts.keys.mkString(", ")}")
+    }
   }
 }
