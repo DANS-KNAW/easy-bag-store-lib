@@ -359,11 +359,6 @@ private[bagstore] class BagStoreImpl(val baseDir: File,
     bagItem.getLocation.map(_ => bagItem)
   }
 
-  /**
-   *
-   * @param fileId
-   * @return
-   */
   override def get(fileId: FileId): Try[FileItem] = {
     trace(fileId)
     get(RegularFileId(fileId.uuid, fileId.path))
