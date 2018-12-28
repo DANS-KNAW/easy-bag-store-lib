@@ -22,7 +22,7 @@ import gov.loc.repository.bagit.exceptions.MaliciousPathException
 import scala.collection.JavaConverters._
 import scala.util.{ Failure, Success }
 
-class BagStoreAddToPrefilledBagStore extends ReadWriteTestSupportFixture {
+class BagStoreAddToPrefilledBagStoreSpec extends ReadWriteTestSupportFixture {
   private val stagingDir = (testDir / "staging").createDirectories()
   testResources / "bag-stores" / "three-revisions" copyToDirectory testDir
   private val bagStore = BagStore(testDir / "three-revisions", stagingDir,

@@ -15,35 +15,22 @@
  */
 package nl.knaw.dans.lib.bagstore
 
-import java.io.InputStream
+class BagStoreGetSpec extends ReadWriteTestSupportFixture {
 
-import better.files.File
+  "get(bagId)" should "succeed if the bag exists in the bag store" in {
 
-import scala.util.Try
+  }
 
-/**
- * An item is a bag, directory or regular file in a bag store. An item ''always'' exists in the context
- * of a bag store.
- */
-trait Item {
-  /**
-   * The item-id is the key you can use to look up this item in the bag store.
-   *
-   * @return the item-id
-   */
-  def getId: ItemId
+  it should "return a failure if there is no bag with the given bag-id" in {
 
-  /**
-   * The location where the item is stored.
-   *
-   * @return
-   */
-  def getLocation: Try[File]
+  }
 
-  /**
-   * Returns whether this item exists in the bag store.
-   *
-   * @return `true` if it exists, `false` otherwise
-   */
-  def exists: Try[Boolean]
+  "get(regularFileId)" should "succeed if the file-item is found as an entry in the bag's manifests" in {
+
+  }
+
+  "get(directoryId)" should "succeed if the directory is found as a prefix in the bag's manifests" in {
+
+  }
+
 }

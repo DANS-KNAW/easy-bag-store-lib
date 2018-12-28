@@ -15,14 +15,14 @@
  */
 package nl.knaw.dans.lib.bagstore
 
-import java.io.InputStream
+import java.io.{ FileNotFoundException, InputStream }
 import java.net.URI
-import java.nio.file.Path
+import java.nio.file.{ NoSuchFileException, Path }
 import java.util.UUID
 
 import better.files.File
 
-import scala.util.Try
+import scala.util.{ Failure, Success, Try }
 
 /**
  * A Bag that is stored in a BagStore.
@@ -34,10 +34,18 @@ case class BagItem (bagStore: BagStoreImpl, uuid: UUID) extends Item {
 
   override def getLocation: Try[File] = Try {
     val container = bagStore.baseDir/bagStore.slashPattern.applyTo(uuid).toString
+    if (container.notExists) throw NoSuchItemException("This bag item does not point to an existing bag")
     val files = container.list.toList
     if(files.isEmpty) throw CorruptBagStoreException(s"$uuid: empty container")
     else if (files.size > 1) throw CorruptBagStoreException(s"$uuid: more than one file in container")
     else files.head
+  }
+
+  override def exists: Try[Boolean] = {
+    getLocation.map(_ => true).recoverWith {
+      case _: NoSuchItemException => Success(false)
+      case e => Failure(e)
+    }
   }
 
   /**

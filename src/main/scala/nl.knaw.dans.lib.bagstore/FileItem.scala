@@ -37,13 +37,9 @@ class FileItem(bagItem: BagItem, path: Path) extends Item {
 
   override def getLocation: Try[File] = bagItem.getLocation.map(_ / path.toString)
 
-  /**
-   * Returns whether this file is part of serialized bag.
-   *
-   * @return `true` if part of a serialized bag, `false` otherwise
-   */
-  def isPackaged: Try[Boolean] = ???
-
+  override def exists: Try[Boolean] = {
+    ???
+  }
 }
 
 object FileItem {
