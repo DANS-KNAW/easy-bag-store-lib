@@ -17,4 +17,15 @@ package nl.knaw.dans.lib.bagstore
 
 import java.nio.file.Path
 
-case class DirectoryItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path)
+import scala.util.Try
+import scala.util.matching.Regex
+
+case class DirectoryItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
+  override def exists: Try[Boolean] = ???
+
+  override protected def getManifestEntryPattern: Regex = {
+    val begin= "^"
+    val end = "$"
+    s"""$begin[0-9a-fA-F]\s+$path/[^/]+$end""".r
+  }
+}

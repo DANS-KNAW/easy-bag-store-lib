@@ -15,12 +15,15 @@
  */
 package nl.knaw.dans.lib.bagstore
 
-import java.io.InputStream
+import java.nio.charset.{ Charset, StandardCharsets }
 import java.nio.file.Path
 
 import better.files._
+import nl.knaw.dans.lib.logging.DebugEnhancedLogging
 
+import scala.language.postfixOps
 import scala.util.Try
+import scala.util.matching.Regex
 
 /**
  * A File (RegularFile or Directory) stored in a BagStore.
@@ -28,7 +31,7 @@ import scala.util.Try
  * @param bagItem the parent BagItem
  * @param path    the relative path in the BagItem
  */
-class FileItem(bagItem: BagItem, path: Path) extends Item {
+abstract class FileItem(bagItem: BagItem, path: Path) extends Item with DebugEnhancedLogging{
 
   override def getId: ItemId = {
     val BagId(uuid) = bagItem.getId
@@ -38,10 +41,28 @@ class FileItem(bagItem: BagItem, path: Path) extends Item {
   override def getLocation: Try[File] = bagItem.getLocation.map(_ / path.toString)
 
   override def exists: Try[Boolean] = {
-    ???
-  }
-}
+    implicit val charSet: Charset = StandardCharsets.UTF_8
 
-object FileItem {
-  def apply(bagItem: BagItem, path: Path): FileItem = new FileItem(bagItem, path)
+    for {
+      bagDir <- bagItem.getLocation
+      _ = debug(s"bagDir = $bagDir; bagDir.exists = ${bagDir.exists}")
+      found <- if (bagDir notExists) Try(false)
+               else for {
+                 manifests <- Try { bagDir.list.filter(f => f.name.startsWith("manifest-") || f.name.startsWith("tagmanifest-")) }
+                 _ = debug(s"Found (tag)manifests: $manifests")
+                 found <- Try { manifests.toList.exists(manifestEntryPattern findFirstIn _.contentAsString isDefined) }
+                 _ = debug(s"Found pattern?: $found")
+               } yield found
+    } yield found
+  }
+
+  private lazy val manifestEntryPattern: Regex = getManifestEntryPattern
+
+  /**
+   * Calculates what the entry for this FileItem looks like in the (tag)manifest files. It must not match
+   * any other FileItem.
+   *
+   * @return the regular expression uniquely matching this FileItem.
+   */
+  protected def getManifestEntryPattern: Regex
 }

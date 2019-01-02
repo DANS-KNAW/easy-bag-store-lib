@@ -33,7 +33,7 @@ import scala.collection.JavaConverters._
 import scala.collection.immutable.Stream.Empty
 import scala.util.{ Failure, Success, Try }
 
-object BagInspector extends DebugEnhancedLogging {
+private[bagstore] object BagInspector extends DebugEnhancedLogging {
   private val bagReader = new BagReader
   private val bagVerifier = new BagVerifier()
 
@@ -64,7 +64,7 @@ object BagInspector extends DebugEnhancedLogging {
  *
  * @param bagFile the bag to inspect.
  */
-case class BagInspector(bagFile: File) {
+private[bagstore] case class BagInspector(bagFile: File) {
 
   private lazy val maybeBag: Try[Bag] = Try {
     bagReader.read(bagFile.path)
@@ -111,6 +111,14 @@ case class BagInspector(bagFile: File) {
         case fails => Left("The following tagmanifests were invalid: " + fails.mkString("[", ", ", "]"))
       })
   }
+
+  def getFiles: Try[Stream[File]] = {
+    maybeBag
+      .map(_.getTagManifests)
+
+
+  }
+
 
   def getFetchItems: Try[Map[Path, FetchItem]] = {
     for {

@@ -21,6 +21,7 @@ import better.files.File
 
 import scala.language.postfixOps
 import scala.util.{ Failure, Try }
+import scala.util.matching.Regex
 
 case class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
 
@@ -35,6 +36,14 @@ case class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagIte
       bagLocation <- bagItem.getLocation
       fileDataLocation <- bagItem.bagStore.getFileDataLocation(bagLocation, path)
     } yield fileDataLocation
+  }
+
+  override protected def getManifestEntryPattern: Regex = {
+    val pattern = ("""^[0-9a-f]+\s+""" + path + """$""").r
+    if (logger.underlying.isDebugEnabled) {
+      debug(s"Pattern: $pattern")
+    }
+    pattern
   }
 
   // TODO: Implement erase
