@@ -58,7 +58,16 @@ case class BagItem (bagStore: BagStoreImpl, uuid: UUID) extends Item {
    * @param includeDirectories  &nbsp;whether to include Directories.
    * @return a stream of Files.
    */
-  def enum(includeRegularFiles: Boolean = true, includeDirectories: Boolean = false): Try[Stream[Try[FileItem]]] = ???
+  def enum(includeRegularFiles: Boolean = true, includeDirectories: Boolean = false): Try[Stream[Try[FileItem]]] = {
+   // Enumerate non-playload files
+
+
+   // Load
+
+
+
+    ???
+  }
 
 
   def deactivate(): Try[Unit] = ???
@@ -82,13 +91,5 @@ case class BagItem (bagStore: BagStoreImpl, uuid: UUID) extends Item {
       location <- getLocation
       result <- bagStore.isVirtuallyValid(location)
     } yield result
-  }
-
-  def getFetchUri(path: Path): Try[Option[URI]] = {
-    for {
-      inspector <- maybeInspector
-      fetchItems <- inspector.getFetchItems
-      optUri <- Try { fetchItems.get(path) }
-    } yield optUri.map(_.uri)
   }
 }

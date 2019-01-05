@@ -17,14 +17,13 @@ package nl.knaw.dans.lib.bagstore
 
 import java.nio.file.Path
 import java.util.concurrent.{ CountDownLatch, ExecutorService }
-import java.util.{ ArrayList => JArrayList, Set => JSet }
+import java.util.{ ArrayList => JArrayList }
 
 import better.files.File
-import gov.loc.repository.bagit.domain.{ Bag, Manifest => BagitManifest, FetchItem => BagItFetchItem }
+import gov.loc.repository.bagit.domain.{ Bag, Manifest => BagitManifest }
 import gov.loc.repository.bagit.exceptions._
 import gov.loc.repository.bagit.reader.BagReader
 import gov.loc.repository.bagit.verify.{ BagVerifier, CheckManifestHashesTask }
-
 import nl.knaw.dans.lib.bagstore.BagInspector.bagReader
 import nl.knaw.dans.lib.error._
 import nl.knaw.dans.lib.logging.DebugEnhancedLogging
@@ -60,26 +59,29 @@ private[bagstore] object BagInspector extends DebugEnhancedLogging {
 }
 
 /**
- * Inspects the contents of a bag.
+ * Inspects the contents of a bag. This is a helper class that contains low-level functions. It only deals with the
+ * bag properties specified by the BagIt specs. Particularly, it does not know about the bag store in the context of which a bag
+ * may be processed.
  *
  * @param bagFile the bag to inspect.
  */
 private[bagstore] case class BagInspector(bagFile: File) {
 
-  private lazy val maybeBag: Try[Bag] = Try {
+  private lazy val triedBag: Try[Bag] = Try {
     bagReader.read(bagFile.path)
   }
 
   /**
-   * Verifies if the bag is valid, according to the BagIt specs. If the verification process succeeded
+   * Verifies that the bag is valid, according to the BagIt specs. If the verification process succeeded
    * the result is a `Right` (meaning the bag is valid) or a `Left` (meaning it is non-valid). If it is
-   * a `Left`, the results contains the reason why the bag is non-valid.
+   * a `Left`, the results contains the reason why the bag is non-valid. If the verification process itself
+   * failed the result is a `Failure`
    *
-   * @return if successful the
+   * @return if successful the result of the validation
    */
   def verifyValid: Try[Either[String, Unit]] = {
     for {
-      bag <- maybeBag
+      bag <- triedBag
       result <- BagInspector.verifyValid(bag)
     } yield result
   }
@@ -103,45 +105,44 @@ private[bagstore] case class BagInspector(bagFile: File) {
       }
     }
 
-    maybeBag
+    triedBag
       .map(_.getTagManifests.asScala.toStream
-        .map(manifest => (manifest, runTasks(manifest)(BagInspector.bagVerifier.getExecutor).unsafeGetOrThrow))
+        .map(
+          manifest => (manifest, runTasks(manifest)(BagInspector.bagVerifier.getExecutor).unsafeGetOrThrow))
         .collect { case (manifest, false) => manifest.getAlgorithm.getMessageDigestName.toLowerCase } match {
         case Empty => Right(())
         case fails => Left("The following tagmanifests were invalid: " + fails.mkString("[", ", ", "]"))
       })
   }
 
-  def getFiles: Try[Stream[File]] = {
-    maybeBag
-      .map(_.getTagManifests)
-
-
+  /**
+   * Returns a map from bag relative path to [[FetchItem]] object. If there are multiple fetch items with the
+   * same target path it is undetermined to which one the path will be mapped.
+   *
+   * @return the fetch items in this bag's `fetch.txt`
+   */
+  def getPathsToFetchItems: Try[Map[Path, FetchItem]] = {
+    for {
+      items <- getFetchItems
+      pathToItem <- Try { items.map(fi => (fi.path, fi)).toMap }
+    } yield pathToItem
   }
 
-
-  def getFetchItems: Try[Map[Path, FetchItem]] = {
+  /**
+   * Returns a sequence of all the fetch items.
+   *
+   * @return a sequence of fetch items.
+   */
+  def getFetchItems: Try[Seq[FetchItem]] = {
     for {
-      bag <- maybeBag
-      _ <- checkForConflictingTargets(bag)
-      items <- Try {
-        bag.getItemsToFetch.asScala.map {
-          fi =>
-            val relativePath = bagFile.path.relativize(fi.path)
-            (relativePath, FetchItem(fi.url.toURI, fi.length, bagFile.path.relativize(fi.path)))
-        }.toMap
-      }
+      bag <- triedBag
+      items = bag.getItemsToFetch.asScala.map(
+        fi => FetchItem(fi.url.toURI, fi.length, bagFile.path.relativize(fi.path)))
     } yield items
   }
 
-  private def checkForConflictingTargets(bag: Bag): Try[Unit] = Try {
-    val conflicts = bag
-      .getItemsToFetch
-      .asScala
-        .map(fi => bag.getRootDir.relativize(fi.path))
-      .groupBy(identity).mapValues(_.size).filter { case (path, size) => size > 1 }
-    if (conflicts.nonEmpty)  {
-      throw new IllegalArgumentException(s"Conflicting fetch items for paths: ${conflicts.keys.mkString(", ")}")
-    }
+  def getBagFiles: Try[Seq[File]] = Try {
+    // TODO: Need to close a stream here?
+    bagFile.walk().toList
   }
 }

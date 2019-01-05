@@ -41,28 +41,9 @@ abstract class FileItem(bagItem: BagItem, path: Path) extends Item with DebugEnh
   override def getLocation: Try[File] = bagItem.getLocation.map(_ / path.toString)
 
   override def exists: Try[Boolean] = {
-    implicit val charSet: Charset = StandardCharsets.UTF_8
+    // Implement enum as a stream, so that it will be efficient on average.
+    //bagItem.enum(includeDirectories = true).map(_.find(/* the file with the matching path */))
 
-    for {
-      bagDir <- bagItem.getLocation
-      _ = debug(s"bagDir = $bagDir; bagDir.exists = ${bagDir.exists}")
-      found <- if (bagDir notExists) Try(false)
-               else for {
-                 manifests <- Try { bagDir.list.filter(f => f.name.startsWith("manifest-") || f.name.startsWith("tagmanifest-")) }
-                 _ = debug(s"Found (tag)manifests: $manifests")
-                 found <- Try { manifests.toList.exists(manifestEntryPattern findFirstIn _.contentAsString isDefined) }
-                 _ = debug(s"Found pattern?: $found")
-               } yield found
-    } yield found
+    ???
   }
-
-  private lazy val manifestEntryPattern: Regex = getManifestEntryPattern
-
-  /**
-   * Calculates what the entry for this FileItem looks like in the (tag)manifest files. It must not match
-   * any other FileItem.
-   *
-   * @return the regular expression uniquely matching this FileItem.
-   */
-  protected def getManifestEntryPattern: Regex
 }

@@ -38,14 +38,6 @@ case class RegularFileItem(bagItem: BagItem, path: Path) extends FileItem(bagIte
     } yield fileDataLocation
   }
 
-  override protected def getManifestEntryPattern: Regex = {
-    val pattern = ("""^[0-9a-f]+\s+""" + path + """$""").r
-    if (logger.underlying.isDebugEnabled) {
-      debug(s"Pattern: $pattern")
-    }
-    pattern
-  }
-
   // TODO: Implement erase
   /**
    *

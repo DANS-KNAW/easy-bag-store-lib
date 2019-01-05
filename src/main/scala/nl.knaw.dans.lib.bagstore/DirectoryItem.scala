@@ -20,12 +20,4 @@ import java.nio.file.Path
 import scala.util.Try
 import scala.util.matching.Regex
 
-case class DirectoryItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path) {
-  override def exists: Try[Boolean] = ???
-
-  override protected def getManifestEntryPattern: Regex = {
-    val begin= "^"
-    val end = "$"
-    s"""$begin[0-9a-fA-F]\s+$path/[^/]+$end""".r
-  }
-}
+case class DirectoryItem(bagItem: BagItem, path: Path) extends FileItem(bagItem, path)

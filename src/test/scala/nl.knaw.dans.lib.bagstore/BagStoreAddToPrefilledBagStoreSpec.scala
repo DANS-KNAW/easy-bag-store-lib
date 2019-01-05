@@ -44,7 +44,7 @@ class BagStoreAddToPrefilledBagStoreSpec extends ReadWriteTestSupportFixture {
     inside(result) {
       case Failure(e) =>
         e shouldBe a[IllegalArgumentException]
-        e.getMessage should include("existing file")
+        e.getMessage should include("existing file(s)")
     }
   }
 
