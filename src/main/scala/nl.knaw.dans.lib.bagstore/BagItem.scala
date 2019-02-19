@@ -15,28 +15,27 @@
  */
 package nl.knaw.dans.lib.bagstore
 
-import java.io.{ FileNotFoundException, InputStream }
-import java.net.URI
-import java.nio.file.{ NoSuchFileException, Path }
+import java.nio.file.Path
 import java.util.UUID
 
 import better.files.File
 
+import scala.language.postfixOps
 import scala.util.{ Failure, Success, Try }
 
 /**
  * A Bag that is stored in a BagStore.
  */
-case class BagItem (bagStore: BagStoreImpl, uuid: UUID) extends Item {
+case class BagItem(bagStore: BagStoreImpl, uuid: UUID) extends Item {
   private lazy val maybeInspector = getLocation.map(BagInspector(_))
 
   override def getId: ItemId = BagId(uuid)
 
   override def getLocation: Try[File] = Try {
-    val container = bagStore.baseDir/bagStore.slashPattern.applyTo(uuid).toString
+    val container = bagStore.baseDir / bagStore.slashPattern.applyTo(uuid).toString
     if (container.notExists) throw NoSuchItemException("This bag item does not point to an existing bag")
     val files = container.list.toList
-    if(files.isEmpty) throw CorruptBagStoreException(s"$uuid: empty container")
+    if (files.isEmpty) throw CorruptBagStoreException(s"$uuid: empty container")
     else if (files.size > 1) throw CorruptBagStoreException(s"$uuid: more than one file in container")
     else files.head
   }
@@ -54,21 +53,29 @@ case class BagItem (bagStore: BagStoreImpl, uuid: UUID) extends Item {
    * the failure and the result must be regarded as incomplete.
    *
    * <!-- nbsp below to fix Scaladoc issue -->
-   * @param includeRegularFiles  &nbsp;whether to include RegularFiles.
+   *
+   * @param includeRegularFiles &nbsp;whether to include RegularFiles.
    * @param includeDirectories  &nbsp;whether to include Directories.
    * @return a stream of Files.
    */
   def enum(includeRegularFiles: Boolean = true, includeDirectories: Boolean = false): Try[Stream[Try[FileItem]]] = {
-   // Enumerate non-playload files
+    def createFileItem(isDirectory: Boolean, path: Path): FileItem = {
+      if (isDirectory) DirectoryItem(this, path)
+      else RegularFileItem(this, path)
+    }
+
+    // Enumerate non-playload files
+    for {
+      bagDir <- getLocation
+      files <- Try { bagDir.walk().withFilter(f => f.name != "data" && (includeDirectories && f.isDirectory || includeRegularFiles && f.isRegularFile)) }
+      fileItems <- Try { files.map(f => createFileItem(f.isDirectory, bagDir.relativize(f))) }
+    } yield fileItems
 
 
-   // Load
-
-
+    // Load
 
     ???
   }
-
 
   def deactivate(): Try[Unit] = ???
 
@@ -79,8 +86,8 @@ case class BagItem (bagStore: BagStoreImpl, uuid: UUID) extends Item {
    *
    *  - it is valid, or
    *  - it is incomplete, but contains a fetch.txt file and can be made valid by fetching the files
-   *    listed in it and removing fetch.txt and its corresponding checksums from the Bag. If
-   *    local-file-uris are used, they must reference RegularFiles in the same BagStore.
+   * listed in it and removing fetch.txt and its corresponding checksums from the Bag. If
+   * local-file-uris are used, they must reference RegularFiles in the same BagStore.
    *
    * BagItems must ''always'' be virtually-valid. Otherwise the BagStore is corrupt.
    *

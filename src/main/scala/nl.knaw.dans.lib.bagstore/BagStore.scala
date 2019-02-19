@@ -522,7 +522,7 @@ private[bagstore] class BagStoreImpl(val baseDir: File,
         tempDir <- Try { File.newTemporaryDirectory("symlink-bag-", Some(stagingDir)) }
         workBag <- symLinkCopy(bag, tempDir / bag.name)
         inspector <- createBagInspector(workBag)
-        pathsToFetch <- inspector.getPathsToFetchItems.map(_.values.map(_.path))
+        pathsToFetch <- inspector.getPathsToFetchItemsMap.map(_.values.map(_.path))
         realToProjected <- getRealToProjected(workBag, pathsToFetch.toSeq)
         _ <- symLinkCompleteBag(realToProjected)
         /*
@@ -571,7 +571,7 @@ private[bagstore] class BagStoreImpl(val baseDir: File,
     else if (location exists) Failure(new IllegalArgumentException(s"$path points to an existing object, but not a regular file"))
     else for {
       inspector <- createBagInspector(bag)
-      fetchItems <- inspector.getPathsToFetchItems
+      fetchItems <- inspector.getPathsToFetchItemsMap
       _ = debug(s"fetchItems = $fetchItems")
       fetchItem <- Try { fetchItems.getOrElse(path, throw NoSuchItemException(s"$path is neither and existing file nor a fetch reference")) }
       fileItem <- get(fetchItem.uri)

@@ -20,10 +20,10 @@ import java.nio.file.Paths
 
 import scala.util.Success
 
-class BagInspectorSpec extends ReadOnlyTestSupportFixture {
+class BagInspectorSpec extends ReadWriteTestSupportFixture {
 
-  "getPathsToFetchItems" should "return an empty map if no fetch.txt is present" in {
-    val fetchItems = BagInspector(testResources / "bags" / "medium").getPathsToFetchItems
+  "getPathsToFetchItemsMap" should "return an empty map if no fetch.txt is present" in {
+    val fetchItems = BagInspector(testResources / "bags" / "medium").getPathsToFetchItemsMap
     fetchItems shouldBe a[Success[_]]
     inside(fetchItems) {
       case Success(fis) => fis shouldBe empty
@@ -31,7 +31,7 @@ class BagInspectorSpec extends ReadOnlyTestSupportFixture {
   }
 
   it should "return an empty map if fetch.txt is empty" in {
-    val fetchItems = BagInspector(testResources / "bags" / "empty-fetchtxt").getPathsToFetchItems
+    val fetchItems = BagInspector(testResources / "bags" / "empty-fetchtxt").getPathsToFetchItemsMap
     fetchItems shouldBe a[Success[_]]
     inside(fetchItems) {
       case Success(fis) => fis shouldBe empty
@@ -39,12 +39,43 @@ class BagInspectorSpec extends ReadOnlyTestSupportFixture {
   }
 
   it should "return a map with several items if several entries are present in fetch.txt" in {
-    val fetchItems = BagInspector(testResources / "bags" / "bag-revision-4").getPathsToFetchItems
+    val fetchItems = BagInspector(testResources / "bags" / "bag-revision-4").getPathsToFetchItemsMap
     fetchItems shouldBe a[Success[_]]
     inside(fetchItems) {
       case Success(fis) =>
         fis should have size 3
         fis(Paths.get("data/x")).uri shouldBe new URI("http://localhost/00000000-0000-0000-0000-000000000002/data/x")
     }
+  }
+
+  "getPayloadManifestEntryPaths" should "return an empty set if the payload is empty" in {
+    val emptyBag = testResources / "bags" / "empty" copyToDirectory testDir
+    emptyBag / "data" createDirectories() // We cannot store empty directories in git, so we create it on the fly here.
+    val paths = new BagInspector(emptyBag).getPayloadManifestEntryPaths
+    paths shouldBe a[Success[_]]
+    inside(paths) {
+      case Success(ps) => ps should be(empty)
+    }
+  }
+
+  it should "return all entries distributed over multiple manifests" in {
+    /*
+     * With BagIt v1.0 each payload manifest is required to contain entries for all payload files, so this test would not seem useful.
+     * However, we will also need to keep supporting v0.97, as many bags are already stored in this format version.
+     */
+    val paths = new BagInspector(testResources / "bags" / "medium-bagit0.97").getPayloadManifestEntryPaths
+    paths shouldBe a[Success[_]]
+    inside(paths) {
+      case Success(ps) => ps should have size 5
+    }
+  }
+
+  it should "return a set with the size of the number of present + to-be-fetched files" in {
+    val paths = new BagInspector(testResources / "bags" / "bag-revision-4").getPayloadManifestEntryPaths
+    paths shouldBe a[Success[_]]
+    inside(paths) {
+      case Success(ps) => ps should have size 4
+    }
+
   }
 }

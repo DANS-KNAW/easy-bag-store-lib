@@ -77,10 +77,13 @@ Each Item has an **item-id**.
 #### item-id
 The item-ids are defined as follows:
 
-- **bag-id** = `<uuid>`, that is a [UUID]. 
-- **file-id** = `<bag-id>/percent-encoded(<path-in-bag>)`, where:
+- **bag-id** = `<uuid>`, that is a [UUID] represented as lowercase hexadecimal digits, with optional hyphens,
+  to group these.
+- **file-id** = `<bag-id>/percent-encoded-segments(<path-in-bag>)`, where:
 
-  - **percent-encoded** means that the path-components are percent encoded as described in [RFC3986].
+  - **percent-encoded-segments** means that to each path segment [percent-encoding] is applied to 
+    all characters except (English) alphanumericals and the underscore character. When percent-encoding a
+    character, the [UTF-8] representation must be used as input.
 
   - **path-in-bag** is the relative path of the File in the bag, after `fetch.txt` has been resolved.
   
@@ -124,7 +127,8 @@ BagStore.
 [BagIt]: https://tools.ietf.org/html/draft-kunze-bagit
 [valid]: https://tools.ietf.org/html/draft-kunze-bagit#section-3
 [UUID]: https://en.wikipedia.org/wiki/Universally_unique_identifier
-[RFC3986]: https://tools.ietf.org/html/rfc3986#section-2.1
+[percent-encoding]: https://tools.ietf.org/html/rfc3986#section-2.1
+[UTF-8]: https://tools.ietf.org/html/rfc3629
 [`fetch.txt`]: https://tools.ietf.org/html/draft-kunze-bagit#section-2.2.3
 
 Operations
@@ -207,6 +211,33 @@ Given are a bag store with a base-dir of `/srv/dans.knaw.nl/bag-store/`, and sla
         that fetches the file for the local path `data/is/here.txt`. If it is  local-file-uri, resolve it
         to a file-id and repeat this same procedure for the file. If it is a non-local URL, dereference 
         that URL using the protocol specified in its scheme-part.
+ 
+Compatiblity with Archival Resource Keys
+----------------------------------------
+Although item-ids are not Archival Resource Keys ([ARK]s) by themselves, they can be used to mint ones. All that is
+needed is Name Assigining Authority Number (NAAN). Optionally, a Name Mapping Authority Hostport can be provided to 
+resolve ARKs over http. 
+
+An ARK has the following general form:
+
+    [http://NMAH/]ark:/NAAN/Name[Qualifier]
+
+All that is needed is to fill in the item-id for the combined `Name[Qualifier]` part. The `bag-id` fulfills the roles of 
+`Name` and, in the case of a FileItem, `/percent-encoded-segments(<path-in-bag>)` is the `Qualifier`. 
+
+Note that the definition of [`percent-encoded-segments`](#item-id) ensures that the resulting string is a syntactically valid ARK and that it 
+can be used without problems as part of an HTTP URL. The characters that can appear unencoded (the alphanumericals and underscore):
+ 
+ * all are part of the ARK character repertoire and (except `/`) have no special semantics in ARK;
+ * the `/` is used as a hierarchical delimiter, and therefore has the semantics required by ARK;
+ * all are member of the set of [URI unreserved characters] and thus have no special semantics in a URI.
+
+The `Name` part is not percent-encoded. Since it is a UUID in lowercase hexadecimal digits, optionally grouped by hyphens, the characters
+that can appear in this part are all member of the set of [URI unreserved characters].
+ 
+[ARK]: http://n2t.net/e/arkspec.txt
+[URI reserved characters]: https://tools.ietf.org/html/rfc3986#section-2.2
+[URI unreserved characters]: https://tools.ietf.org/html/rfc3986#section-2.3
         
  
 Migrations

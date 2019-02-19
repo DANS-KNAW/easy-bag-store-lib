@@ -121,7 +121,7 @@ private[bagstore] case class BagInspector(bagFile: File) {
    *
    * @return the fetch items in this bag's `fetch.txt`
    */
-  def getPathsToFetchItems: Try[Map[Path, FetchItem]] = {
+  def getPathsToFetchItemsMap: Try[Map[Path, FetchItem]] = {
     for {
       items <- getFetchItems
       pathToItem <- Try { items.map(fi => (fi.path, fi)).toMap }
@@ -141,8 +141,26 @@ private[bagstore] case class BagInspector(bagFile: File) {
     } yield items
   }
 
+  /**
+   * Returns all the files actually in the bag (so, excluding fetch items).
+   *
+   * @return a sequence of files
+   */
   def getBagFiles: Try[Seq[File]] = Try {
     // TODO: Need to close a stream here?
     bagFile.walk().toList
+  }
+
+  /**
+   * Returns the bag relative paths in the combined payload manifests.
+   *
+   * @return a set of paths
+   */
+  def getPayloadManifestEntryPaths: Try[Set[Path]] = {
+    for {
+      bag <- triedBag
+      manifests <- Try { bag.getPayLoadManifests.asScala }
+      paths <- Try { manifests.flatMap(m => m.getFileToChecksumMap.keySet().asScala) }
+    } yield paths.toSet
   }
 }
